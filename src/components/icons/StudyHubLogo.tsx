@@ -1,5 +1,5 @@
 import React from "react";
-import Svg, { Rect, Text as SvgText } from "react-native-svg";
+import Svg, { Rect } from "react-native-svg";
 
 export const StudyHubLogo: React.FC = () => (
   <Svg width="120" height="120" viewBox="0 0 120 120">

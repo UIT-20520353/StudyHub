@@ -1,77 +1,45 @@
-import React, { useEffect } from "react";
-import { Animated, StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
-import { StudyHubLogo } from "../components/icons/StudyHubLogo";
-import { useTheme, useTranslation } from "../hooks";
+import { LinearGradient } from "expo-linear-gradient";
+import LottieView from "lottie-react-native";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 export default function SplashScreen() {
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-  const fadeAnim = new Animated.Value(0);
-  const scaleAnim = new Animated.Value(0.3);
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 10,
-        friction: 2,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
-      >
-        <StudyHubLogo />
-        <Text
-          variant="displayLarge"
-          style={[styles.title, { color: colors.primary }]}
-        >
-          {t("app_name")}
-        </Text>
-        <Text
-          variant="bodyLarge"
-          style={[styles.subtitle, { color: colors.onBackground }]}
-        >
-          Your Learning Journey Starts Here
-        </Text>
-      </Animated.View>
-    </View>
+    <LinearGradient
+      colors={["#e0c3fc", "#8ec5fc", "#f9f9f9"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+      <View style={styles.card}>
+        <LottieView
+          source={require("../assets/lottie/splash-screen.json")}
+          autoPlay
+          loop
+          style={styles.lottie}
+        />
+      </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  gradient: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  content: {
+  card: {
+    width: width * 0.8,
     alignItems: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 24,
   },
-  title: {
-    fontSize: 42,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    textAlign: "center",
+  lottie: {
+    width: 350,
+    height: 350,
+    marginTop: 8,
   },
 });

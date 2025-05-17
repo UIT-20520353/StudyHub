@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MainTabNavigator from "./MainTabNavigator";
 import SplashScreen from "../screens/SplashScreen";
-// import AuthNavigator from "./AuthNavigator";
 import { useAuth } from "../hooks";
 
 const Stack = createStackNavigator();
@@ -13,7 +12,6 @@ export default function AppNavigator() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);

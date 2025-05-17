@@ -25,6 +25,7 @@ export const NAMESPACES = {
   COMMUNITY: "community",
   PROFILE: "profile",
   SETTINGS: "settings",
+  TABS: "tabs",
 };
 
 export const LANGUAGE_STORAGE_KEY = "@studyhub/language";

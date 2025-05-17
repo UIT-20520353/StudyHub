@@ -1,15 +1,19 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
 // import HomeScreen from "../screens/main/HomeScreen";
 // import CommunityScreen from "../screens/main/CommunityScreen";
 // import ProfileScreen from "../screens/main/ProfileScreen";
+import { useTranslation } from "../hooks";
+import { NAMESPACES } from "../i18n";
+import HomeScreen from "../screens/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
+  const { t } = useTranslation(NAMESPACES.TABS);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -37,24 +41,25 @@ export default function MainTabNavigator() {
         },
         tabBarActiveTintColor: "#1976D2",
         tabBarInactiveTintColor: "gray",
+        headerShown: false,
       })}
     >
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: "Trang chủ" }}
-      /> */}
+        options={{ title: t("home") }}
+      />
       <Tab.Screen
         name="Marketplace"
         component={MarketplaceScreen}
-        options={{ title: "Mua bán" }}
-      />
-      {/* <Tab.Screen
-        name="Community"
-        component={CommunityScreen}
-        options={{ title: "Cộng đồng" }}
+        options={{ title: t("marketplace") }}
       />
       <Tab.Screen
+        name="Community"
+        component={MarketplaceScreen}
+        options={{ title: t("community") }}
+      />
+      {/* <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ title: "Hồ sơ" }}
