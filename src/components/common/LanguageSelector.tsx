@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useTranslation } from "../../i18n/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 import { LANGUAGES, LANGUAGE_NAMES } from "../../i18n";
 
 const LanguageSelector = () => {

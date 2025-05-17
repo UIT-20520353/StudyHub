@@ -1,7 +1,5 @@
-// src/screens/main/MarketplaceScreen.tsx
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   StyleSheet,
@@ -14,6 +12,7 @@ import BookCard from "../../components/book/BookCard";
 import { Book } from "../../types";
 import { NAMESPACES } from "../../i18n";
 import LanguageSelector from "../../components/common/LanguageSelector";
+import { useTranslation } from "../../hooks";
 
 export default function MarketplaceScreen({ navigation }: any) {
   const { t } = useTranslation(NAMESPACES.COMMON);
@@ -27,7 +26,6 @@ export default function MarketplaceScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -53,7 +51,6 @@ export default function MarketplaceScreen({ navigation }: any) {
         ))}
       </ScrollView>
 
-      {/* Add Book Button */}
       <TouchableOpacity style={styles.addButton} onPress={handleAddBook}>
         <MaterialIcons name="add" size={24} color="#fff" />
       </TouchableOpacity>
