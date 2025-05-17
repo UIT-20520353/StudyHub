@@ -1,0 +1,90 @@
+{
+  "common": {
+    "app_name": "StudyHub",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "confirm": "Xác nhận",
+    "search": "Tìm kiếm",
+    "filter": "Lọc"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirm_password": "Xác nhận mật khẩu",
+    "forgot_password": "Quên mật khẩu?",
+    "no_account": "Chưa có tài khoản?",
+    "has_account": "Đã có tài khoản?",
+    "signup_now": "Đăng ký ngay",
+    "login_now": "Đăng nhập ngay",
+    "full_name": "Họ và tên",
+    "student_id": "Mã sinh viên",
+    "university": "Trường đại học",
+    "major": "Ngành học",
+    "year": "Năm học",
+    "phone": "Số điện thoại"
+  },
+  "tabs": {
+    "home": "Trang chủ",
+    "marketplace": "Mua bán",
+    "community": "Cộng đồng",
+    "profile": "Hồ sơ"
+  },
+  "home": {
+    "welcome": "Chào mừng đến với StudyHub",
+    "recent_books": "Sách mới đăng",
+    "popular_posts": "Bài viết nổi bật",
+    "view_all": "Xem tất cả"
+  },
+  "marketplace": {
+    "search_books": "Tìm kiếm sách...",
+    "new_condition": "Mới",
+    "like_new_condition": "Như mới",
+    "good_condition": "Cũ",
+    "fair_condition": "Rất cũ",
+    "sell_book": "Bán sách",
+    "book_details": "Thông tin sách",
+    "seller_info": "Thông tin người bán",
+    "contact_seller": "Liên hệ người bán",
+    "price": "Giá",
+    "original_price": "Giá gốc"
+  },
+  "community": {
+    "create_post": "Tạo bài viết",
+    "what_to_share": "Bạn muốn chia sẻ gì?",
+    "experience": "Kinh nghiệm",
+    "document": "Tài liệu",
+    "question": "Câu hỏi",
+    "answer": "Trả lời",
+    "comments": "Bình luận",
+    "write_comment": "Viết bình luận..."
+  },
+  "profile": {
+    "edit_profile": "Chỉnh sửa hồ sơ",
+    "my_books": "Sách của tôi",
+    "my_posts": "Bài viết của tôi",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất",
+    "language": "Ngôn ngữ",
+    "about": "Giới thiệu",
+    "help": "Trợ giúp",
+    "privacy_policy": "Chính sách bảo mật",
+    "terms": "Điều khoản sử dụng"
+  },
+  "settings": {
+    "language": "Ngôn ngữ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
+    "theme": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "notifications": "Thông báo",
+    "privacy": "Quyền riêng tư",
+    "security": "Bảo mật"
+  }
+}

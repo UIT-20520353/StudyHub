@@ -1,0 +1,90 @@
+{
+  "common": {
+    "app_name": "StudyHub",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account?",
+    "has_account": "Already have an account?",
+    "signup_now": "Sign up now",
+    "login_now": "Login now",
+    "full_name": "Full Name",
+    "student_id": "Student ID",
+    "university": "University",
+    "major": "Major",
+    "year": "Year",
+    "phone": "Phone Number"
+  },
+  "tabs": {
+    "home": "Home",
+    "marketplace": "Marketplace",
+    "community": "Community",
+    "profile": "Profile"
+  },
+  "home": {
+    "welcome": "Welcome to StudyHub",
+    "recent_books": "Recent Books",
+    "popular_posts": "Popular Posts",
+    "view_all": "View All"
+  },
+  "marketplace": {
+    "search_books": "Search books...",
+    "new_condition": "New",
+    "like_new_condition": "Like New",
+    "good_condition": "Good",
+    "fair_condition": "Fair",
+    "sell_book": "Sell Book",
+    "book_details": "Book Details",
+    "seller_info": "Seller Information",
+    "contact_seller": "Contact Seller",
+    "price": "Price",
+    "original_price": "Original Price"
+  },
+  "community": {
+    "create_post": "Create Post",
+    "what_to_share": "What would you like to share?",
+    "experience": "Experience",
+    "document": "Document",
+    "question": "Question",
+    "answer": "Answer",
+    "comments": "Comments",
+    "write_comment": "Write a comment..."
+  },
+  "profile": {
+    "edit_profile": "Edit Profile",
+    "my_books": "My Books",
+    "my_posts": "My Posts",
+    "settings": "Settings",
+    "logout": "Logout",
+    "language": "Language",
+    "about": "About",
+    "help": "Help",
+    "privacy_policy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "settings": {
+    "language": "Language",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "security": "Security"
+  }
+}
