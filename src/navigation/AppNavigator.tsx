@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MainTabNavigator from "./MainTabNavigator";
-import SplashScreen from "../screens/SplashScreen";
-import { useAuth } from "../hooks";
+import AuthNavigator from "./AuthNavigator";
+import SplashScreen from "../screens/static/SplashScreen";
+import { useAuth } from "../contexts/AuthContext";
 
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,20 +20,17 @@ export default function AppNavigator() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <SplashScreen />;
   }
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* {isAuthenticated ? (
+        {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainTabNavigator} />
         ) : (
           <Stack.Screen name="Auth" component={AuthNavigator} />
-        )} */}
-        {isAuthenticated && (
-          <Stack.Screen name="Main" component={MainTabNavigator} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

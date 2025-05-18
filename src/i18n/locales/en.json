@@ -27,7 +27,18 @@
     "university": "University",
     "major": "Major",
     "year": "Year",
-    "phone": "Phone Number"
+    "phone": "Phone Number",
+    "welcome_back": "Welcome Back!",
+    "logging_in": "Logging in...",
+    "validation": {
+      "invalid_email": "Invalid email address",
+      "email_required": "Email is required",
+      "password_min_length": "Password must be at least 6 characters",
+      "password_required": "Password is required"
+    },
+    "error": {
+      "login_failed": "Failed to login"
+    }
   },
   "tabs": {
     "home": "Home",
@@ -86,5 +97,14 @@
     "notifications": "Notifications",
     "privacy": "Privacy",
     "security": "Security"
+  },
+  "api": {
+    "error": {
+      "validate": {
+        "login": {
+          "invalid-credential": "Invalid email or password"
+        }
+      }
+    }
   }
 }

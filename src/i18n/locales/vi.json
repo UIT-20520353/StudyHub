@@ -27,7 +27,18 @@
     "university": "Trường đại học",
     "major": "Ngành học",
     "year": "Năm học",
-    "phone": "Số điện thoại"
+    "phone": "Số điện thoại",
+    "welcome_back": "Chào mừng trở lại!",
+    "logging_in": "Đang đăng nhập...",
+    "validation": {
+      "invalid_email": "Email không hợp lệ",
+      "email_required": "Vui lòng nhập email",
+      "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+      "password_required": "Vui lòng nhập mật khẩu"
+    },
+    "error": {
+      "login_failed": "Đăng nhập thất bại"
+    }
   },
   "tabs": {
     "home": "Trang chủ",
@@ -86,5 +97,14 @@
     "notifications": "Thông báo",
     "privacy": "Quyền riêng tư",
     "security": "Bảo mật"
+  },
+  "api": {
+    "error": {
+      "validate": {
+        "login": {
+          "invalid-credential": "Email hoặc mật khẩu không đúng"
+        }
+      }
+    }
   }
 }

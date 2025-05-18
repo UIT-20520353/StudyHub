@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppNavigator from "./src/navigation/AppNavigator";
 import initI18n from "./src/i18n";
 import { ActivityIndicator, View } from "react-native";
+import { AuthProvider } from "./src/contexts/AuthContext";
 
 export default function App() {
   const [isI18nInitialized, setIsI18nInitialized] = useState(false);
@@ -25,8 +26,10 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <AppNavigator />
-    </SafeAreaProvider>
+    <AuthProvider>
+      <SafeAreaProvider>
+        <AppNavigator />
+      </SafeAreaProvider>
+    </AuthProvider>
   );
 }

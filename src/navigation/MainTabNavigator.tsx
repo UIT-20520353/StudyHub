@@ -6,8 +6,9 @@ import React from "react";
 // import ProfileScreen from "../screens/main/ProfileScreen";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
+import CommunityScreen from "../screens/main/CommunityScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +57,7 @@ export default function MainTabNavigator() {
       />
       <Tab.Screen
         name="Community"
-        component={MarketplaceScreen}
+        component={CommunityScreen}
         options={{ title: t("community") }}
       />
       {/* <Tab.Screen

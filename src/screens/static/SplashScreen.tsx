@@ -15,7 +15,7 @@ export default function SplashScreen() {
     >
       <View style={styles.card}>
         <LottieView
-          source={require("../assets/lottie/splash-screen.json")}
+          source={require("../../assets/lottie/splash-screen.json")}
           autoPlay
           loop
           style={styles.lottie}

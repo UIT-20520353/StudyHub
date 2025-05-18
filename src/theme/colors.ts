@@ -48,6 +48,14 @@ export const colors = {
     black: "#000000",
     transparent: "transparent",
   },
+
+  // Button colors
+  button: {
+    primary: {
+      main: "#7EC8E3",
+      disabled: "#cccccc",
+    },
+  },
 } as const;
 
 // Type for the colors object

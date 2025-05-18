@@ -5,22 +5,22 @@ import axios, {
   AxiosResponse,
 } from "axios";
 import { ApiResponse, ApiError } from "../types/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AUTH_TOKEN_KEY } from "../constants/AppConstants";
+import { Config } from "../constants/Config";
 
-// Create axios instance with custom config
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8082", // Replace with your API base URL
-  timeout: 10000, // 10 seconds
+  baseURL: `${Config.API_URL}/api`,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // You can add auth token here
-    const token = ""; // Get token from your storage
+  async (config: InternalAxiosRequestConfig) => {
+    const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,44 +31,15 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response.data;
   },
   (error: AxiosError) => {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      switch (error.response.status) {
-        case 401:
-          // Handle unauthorized
-          break;
-        case 403:
-          // Handle forbidden
-          break;
-        case 404:
-          // Handle not found
-          break;
-        case 500:
-          // Handle server error
-          break;
-        default:
-          // Handle other errors
-          break;
-      }
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error("No response received:", error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error("Error setting up request:", error.message);
-    }
     return Promise.reject(error);
   }
 );
 
-// Wrapper function to handle API calls
 export const apiCall = async <T>(
   promise: Promise<T>
 ): Promise<ApiResponse<T>> => {
@@ -79,14 +50,10 @@ export const apiCall = async <T>(
       body: data,
       errors: undefined,
     };
-  } catch (error) {
-    const axiosError = error as AxiosError;
+  } catch (error: any) {
     const apiError: ApiError = {
-      status: axiosError.response?.status || 500,
-      message:
-        (axiosError.response?.data as { message?: string })?.message ||
-        axiosError.message ||
-        "An error occurred",
+      status: (error.response?.data as any)?.status || 500,
+      message: (error.response?.data as any)?.detail || "An error occurred",
     };
     return {
       ok: false,
