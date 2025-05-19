@@ -1,16 +1,20 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import CommonHeader from "../../components/common/CommonHeader";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { RootStackNavigationProp } from "../../types/navigation";
+import CommonHeader from "../../components/common/CommonHeader";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTranslation } from "../../hooks";
+import { NAMESPACES } from "../../i18n";
+import { typography } from "../../styles/typography";
+import { RootStackNavigationProp } from "../../types/navigation";
 
 interface HomeScreenProps {
   navigation: RootStackNavigationProp;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const { t } = useTranslation(NAMESPACES.HOME);
 
   const handleProfilePress = (): void => {
     signOut();
@@ -28,7 +32,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           onProfilePress={handleProfilePress}
           onChatPress={handleChatPress}
         />
-        {/* Nội dung màn hình của bạn ở đây */}
+
+        <View style={styles.content}>
+          <Text style={[typography.h3]}>
+            {t("hello", { name: user?.fullName })}
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -42,6 +51,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  content: {
+    flex: 1,
+    padding: 16,
   },
 });
 

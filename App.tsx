@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppNavigator from "./src/navigation/AppNavigator";
 import initI18n from "./src/i18n";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, LogBox } from "react-native";
 import { AuthProvider } from "./src/contexts/AuthContext";
+
+// Disable Inspector warnings
+LogBox.ignoreLogs(["Inspector"]);
 
 export default function App() {
   const [isI18nInitialized, setIsI18nInitialized] = useState(false);

@@ -50,7 +50,8 @@
     "welcome": "Welcome to StudyHub",
     "recent_books": "Recent Books",
     "popular_posts": "Popular Posts",
-    "view_all": "View All"
+    "view_all": "View All",
+    "hello": "Hello, {{name}}!"
   },
   "marketplace": {
     "search_books": "Search books...",

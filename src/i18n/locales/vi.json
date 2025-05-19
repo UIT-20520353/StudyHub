@@ -50,7 +50,8 @@
     "welcome": "Chào mừng đến với StudyHub",
     "recent_books": "Sách mới đăng",
     "popular_posts": "Bài viết nổi bật",
-    "view_all": "Xem tất cả"
+    "view_all": "Xem tất cả",
+    "hello": "Chào, {{name}}!"
   },
   "marketplace": {
     "search_books": "Tìm kiếm sách...",
