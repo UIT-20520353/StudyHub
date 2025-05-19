@@ -13,6 +13,7 @@ import { Book } from "../../types";
 import { NAMESPACES } from "../../i18n";
 import LanguageSelector from "../../components/common/LanguageSelector";
 import { useTranslation } from "../../hooks";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MarketplaceScreen({ navigation }: any) {
   const { t } = useTranslation(NAMESPACES.COMMON);
@@ -25,7 +26,7 @@ export default function MarketplaceScreen({ navigation }: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -57,7 +58,7 @@ export default function MarketplaceScreen({ navigation }: any) {
 
       <LanguageSelector />
       <Text>{t("loading")}</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

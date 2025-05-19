@@ -60,11 +60,11 @@ export default function MainTabNavigator() {
         component={CommunityScreen}
         options={{ title: t("community") }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
-        options={{ title: "Hồ sơ" }}
-      /> */}
+        component={CommunityScreen}
+        options={{ title: t("profile") }}
+      />
     </Tab.Navigator>
   );
 }

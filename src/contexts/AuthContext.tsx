@@ -50,6 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (ok && body) {
         await AsyncStorage.setItem(AUTH_TOKEN_KEY, body.token);
+        await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(body.user));
         setUser(body.user);
       }
 
@@ -72,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const signOut = async () => {
     try {
       await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+      await AsyncStorage.removeItem(AUTH_USER_KEY);
       setUser(null);
     } catch (error) {
       throw new Error("Failed to sign out");

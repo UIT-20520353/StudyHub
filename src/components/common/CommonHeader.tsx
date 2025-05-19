@@ -1,7 +1,8 @@
-import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CommonHeaderProps {
   onProfilePress?: () => void;
@@ -13,6 +14,7 @@ const CommonHeader: React.FC<CommonHeaderProps> = ({
   onChatPress,
 }) => {
   const navigation = useNavigation();
+  const { user } = useAuth();
 
   const handleProfilePress = () => {
     if (onProfilePress) {
@@ -32,18 +34,36 @@ const CommonHeader: React.FC<CommonHeaderProps> = ({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleChatPress} style={styles.iconContainer}>
-        <Ionicons name="chatbubble-outline" size={24} color="#333" />
-      </TouchableOpacity>
+      <View style={styles.avatarContainer}>
+        <Image
+          source={
+            user?.avatarUrl
+              ? { uri: user.avatarUrl }
+              : require("../../assets/images/default-avatar.jpg")
+          }
+          style={styles.avatar}
+        />
+      </View>
 
       <View style={styles.spacer} />
 
-      <TouchableOpacity
+      <View style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={handleChatPress}
+          style={styles.iconContainer}
+        >
+          <Ionicons name="chatbubble-outline" size={24} color="#333" />
+        </TouchableOpacity>
+
+        <Ionicons name="notifications-outline" size={26} color="#333" />
+      </View>
+
+      {/* <TouchableOpacity
         onPress={handleProfilePress}
         style={styles.iconContainer}
       >
         <Ionicons name="person-outline" size={24} color="#333" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -59,10 +79,25 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   iconContainer: {
-    padding: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
   },
   spacer: {
     flex: 1,
+  },
+  welcomeText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  avatarContainer: {
+    marginRight: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#eee",
   },
 });
 
