@@ -9,6 +9,7 @@ import { NAMESPACES } from "../i18n";
 import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
 import CommunityScreen from "../screens/main/CommunityScreen";
+import { colors } from "../theme/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,9 +41,13 @@ export default function MainTabNavigator() {
 
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#1976D2",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: colors.primary.main,
+        tabBarInactiveTintColor: colors.common.gray,
         headerShown: false,
+        tabBarLabelStyle: {
+          fontFamily: "OpenSans_600SemiBold",
+          fontSize: 10,
+        },
       })}
     >
       <Tab.Screen

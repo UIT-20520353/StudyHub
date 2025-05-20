@@ -47,6 +47,7 @@ export const colors = {
     white: "#FFFFFF",
     black: "#000000",
     transparent: "transparent",
+    gray: "#666666",
   },
 
   // Button colors
