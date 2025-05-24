@@ -1,5 +1,10 @@
-import { FC } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { FC, Key } from "react";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { colors } from "../../theme/colors";
 
 interface ButtonProps {
@@ -7,14 +12,20 @@ interface ButtonProps {
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
-export const Button: FC<ButtonProps> = ({ children, onPress, disabled }) => {
+export const Button: FC<ButtonProps> = ({
+  children,
+  onPress,
+  disabled,
+  style,
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
-      style={[styles.button, disabled && styles.buttonDisabled]}
+      style={[styles.button, disabled && styles.buttonDisabled, style]}
     >
       {children}
     </TouchableOpacity>

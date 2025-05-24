@@ -42,16 +42,18 @@
   },
   "tabs": {
     "home": "Home",
-    "marketplace": "Marketplace",
+    "marketplace": "Market",
     "community": "Community",
-    "profile": "Profile"
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "home": {
     "welcome": "Welcome to StudyHub",
     "recent_books": "Recent Books",
     "popular_posts": "Popular Posts",
     "view_all": "View All",
-    "hello": "Hello, {{name}}!"
+    "hello": "Hello, {{name}}!",
+    "introduce": "StudyHub - Where students trade used books, share materials and study tips.\nSave money, connect with peers!"
   },
   "marketplace": {
     "search_books": "Search books...",
@@ -97,7 +99,12 @@
     "dark": "Dark",
     "notifications": "Notifications",
     "privacy": "Privacy",
-    "security": "Security"
+    "security": "Security",
+    "title": "Settings",
+    "profile": "Profile",
+    "button": {
+      "logout": "Logout"
+    }
   },
   "api": {
     "error": {

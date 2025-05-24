@@ -44,14 +44,16 @@
     "home": "Trang chủ",
     "marketplace": "Mua bán",
     "community": "Cộng đồng",
-    "profile": "Hồ sơ"
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt"
   },
   "home": {
     "welcome": "Chào mừng đến với StudyHub",
     "recent_books": "Sách mới đăng",
     "popular_posts": "Bài viết nổi bật",
     "view_all": "Xem tất cả",
-    "hello": "Chào, {{name}}!"
+    "hello": "Chào, {{name}}!",
+    "introduce": "StudyHub - Nơi sinh viên mua bán sách cũ, chia sẻ tài liệu và kinh nghiệm học tập.\nTiết kiệm chi phí, kết nối cộng đồng!"
   },
   "marketplace": {
     "search_books": "Tìm kiếm sách...",
@@ -97,7 +99,12 @@
     "dark": "Tối",
     "notifications": "Thông báo",
     "privacy": "Quyền riêng tư",
-    "security": "Bảo mật"
+    "security": "Bảo mật",
+    "title": "Cài đặt",
+    "profile": "Hồ sơ",
+    "button": {
+      "logout": "Đăng xuất"
+    }
   },
   "api": {
     "error": {

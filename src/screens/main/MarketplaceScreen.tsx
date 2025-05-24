@@ -11,7 +11,6 @@ import {
 import BookCard from "../../components/book/BookCard";
 import { Book } from "../../types";
 import { NAMESPACES } from "../../i18n";
-import LanguageSelector from "../../components/common/LanguageSelector";
 import { useTranslation } from "../../hooks";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -56,7 +55,6 @@ export default function MarketplaceScreen({ navigation }: any) {
         <MaterialIcons name="add" size={24} color="#fff" />
       </TouchableOpacity>
 
-      <LanguageSelector />
       <Text>{t("loading")}</Text>
     </SafeAreaView>
   );

@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Home: undefined;
   Profile: undefined;
   Chat: undefined;
+  Language: undefined;
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;

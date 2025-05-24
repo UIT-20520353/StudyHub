@@ -34,11 +34,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         />
 
         <View style={styles.content}>
-          <Text style={styles.welcomeText}>
-            {t("hello", { name: user?.fullName })}
-          </Text>
+          <View style={styles.introduceContainer}>
+            <Text style={styles.welcomeText}>
+              {t("hello", { name: user?.fullName })}
+            </Text>
+            <Text style={styles.introduceText}>{t("introduce")}</Text>
+          </View>
 
-          <ScrollView
+          {/* <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
@@ -48,7 +51,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 <Text style={styles.cardText}>Card {item}</Text>
               </View>
             ))}
-          </ScrollView>
+          </ScrollView> */}
         </View>
       </View>
     </SafeAreaView>
@@ -70,9 +73,8 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontFamily: "OpenSans_700Bold",
-    fontSize: 24,
-    color: colors.text.primary,
-    marginBottom: 8,
+    fontSize: 16,
+    color: colors.common.gray3,
   },
   scrollContent: {
     paddingVertical: 16,
@@ -90,6 +92,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontFamily: "OpenSans_600SemiBold",
+  },
+  introduceText: {
+    fontFamily: "OpenSans_400Regular",
+    fontSize: 12,
+    color: colors.text.secondary,
+  },
+  introduceContainer: {
+    backgroundColor: colors.common.gray2,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    gap: 6,
   },
 });
 

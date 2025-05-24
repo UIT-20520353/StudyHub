@@ -1,14 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-// import HomeScreen from "../screens/main/HomeScreen";
-// import CommunityScreen from "../screens/main/CommunityScreen";
-// import ProfileScreen from "../screens/main/ProfileScreen";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
+import CommunityScreen from "../screens/main/CommunityScreen";
 import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
-import CommunityScreen from "../screens/main/CommunityScreen";
+import SettingsStackNavigator from "./SettingsStackNavigator";
 import { colors } from "../theme/colors";
 
 const Tab = createBottomTabNavigator();
@@ -32,8 +30,8 @@ export default function MainTabNavigator() {
             case "Community":
               iconName = "groups";
               break;
-            case "Profile":
-              iconName = "person";
+            case "Settings":
+              iconName = "settings";
               break;
             default:
               iconName = "home";
@@ -66,9 +64,9 @@ export default function MainTabNavigator() {
         options={{ title: t("community") }}
       />
       <Tab.Screen
-        name="Profile"
-        component={CommunityScreen}
-        options={{ title: t("profile") }}
+        name="Settings"
+        component={SettingsStackNavigator}
+        options={{ title: t("settings") }}
       />
     </Tab.Navigator>
   );
