@@ -53,7 +53,9 @@
     "popular_posts": "Bài viết nổi bật",
     "view_all": "Xem tất cả",
     "hello": "Chào, {{name}}!",
-    "introduce": "StudyHub - Nơi sinh viên mua bán sách cũ, chia sẻ tài liệu và kinh nghiệm học tập.\nTiết kiệm chi phí, kết nối cộng đồng!"
+    "introduce": "StudyHub - Nơi sinh viên mua bán sách cũ, chia sẻ tài liệu và kinh nghiệm học tập.\nTiết kiệm chi phí, kết nối cộng đồng!",
+    "top_products": "Sách nổi bật",
+    "top_topics": "Chủ đề nổi bật"
   },
   "marketplace": {
     "search_books": "Tìm kiếm sách...",

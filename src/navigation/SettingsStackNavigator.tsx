@@ -5,6 +5,7 @@ import SettingsScreen from "../screens/main/SettingsScreen";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
 import LanguageScreen from "../screens/main/settings/LanguageScreen";
+import ProfileScreen from "../screens/main/settings/ProfileScreen";
 import { colors } from "../theme/colors";
 
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ export default function SettingsStackNavigator() {
         headerTitleStyle: {
           fontFamily: "OpenSans_600SemiBold",
         },
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -36,7 +38,7 @@ export default function SettingsStackNavigator() {
       />
       <Stack.Screen
         name="Profile"
-        component={LanguageScreen}
+        component={ProfileScreen}
         options={{ title: t("profile") }}
       />
     </Stack.Navigator>

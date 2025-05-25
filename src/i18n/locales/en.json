@@ -53,7 +53,9 @@
     "popular_posts": "Popular Posts",
     "view_all": "View All",
     "hello": "Hello, {{name}}!",
-    "introduce": "StudyHub - Where students trade used books, share materials and study tips.\nSave money, connect with peers!"
+    "introduce": "StudyHub - Where students trade used books, share materials and study tips.\nSave money, connect with peers!",
+    "top_products": "Top products",
+    "top_topics": "Top topics"
   },
   "marketplace": {
     "search_books": "Search books...",

@@ -1,49 +1,73 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from "../../../components/common/Button";
+import { StackNavigationHeader } from "../../../components/common/StackNavigationHeader";
 import { useTranslation } from "../../../hooks";
 import { LANGUAGES, NAMESPACES } from "../../../i18n";
 import { colors } from "../../../theme/colors";
-import { Button } from "../../../components/common/Button";
+import { RootStackParamList } from "../../../types/navigation";
 
-const LanguageScreen: React.FC = () => {
+type LanguageScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Language"
+>;
+
+interface LanguageScreenProps {
+  navigation: LanguageScreenNavigationProp;
+}
+
+const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation(NAMESPACES.SETTINGS);
   const { changeLanguage, getCurrentLanguage } = useTranslation(
     NAMESPACES.SETTINGS
   );
   const currentLanguage = getCurrentLanguage();
 
   return (
-    <View style={styles.container}>
-      <Button
-        style={[
-          styles.languageCard,
-          currentLanguage === LANGUAGES.VI && styles.activeLanguageCard,
-        ]}
-        onPress={() => changeLanguage(LANGUAGES.VI)}
-      >
-        <Image
-          source={require("../../../assets/images/flag/vietnam.png")}
-          style={styles.languageFlag}
-        />
-        <Text style={styles.languageText}>Tiếng Việt</Text>
-      </Button>
-      <Button
-        style={[
-          styles.languageCard,
-          currentLanguage === LANGUAGES.EN && styles.activeLanguageCard,
-        ]}
-        onPress={() => changeLanguage(LANGUAGES.EN)}
-      >
-        <Image
-          source={require("../../../assets/images/flag/united-states.png")}
-          style={styles.languageFlag}
-        />
-        <Text style={styles.languageText}>English</Text>
-      </Button>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <StackNavigationHeader
+        title={t("language")}
+        onBackPress={() => navigation.goBack()}
+      />
+      <View style={styles.container}>
+        <Button
+          style={[
+            styles.languageCard,
+            currentLanguage === LANGUAGES.VI && styles.activeLanguageCard,
+          ]}
+          onPress={() => changeLanguage(LANGUAGES.VI)}
+        >
+          <Image
+            source={require("../../../assets/images/flag/vietnam.png")}
+            style={styles.languageFlag}
+          />
+          <Text style={styles.languageText}>Tiếng Việt</Text>
+        </Button>
+        <Button
+          style={[
+            styles.languageCard,
+            currentLanguage === LANGUAGES.EN && styles.activeLanguageCard,
+          ]}
+          onPress={() => changeLanguage(LANGUAGES.EN)}
+        >
+          <Image
+            source={require("../../../assets/images/flag/united-states.png")}
+            style={styles.languageFlag}
+          />
+          <Text style={styles.languageText}>English</Text>
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.common.white,
+  },
   container: {
     padding: 16,
     flexDirection: "row",

@@ -33,18 +33,14 @@ export default function AppNavigator() {
   useEffect(() => {
     const prepare = async () => {
       try {
-        // Hide native splash screen
         await ExpoSplashScreen.hideAsync();
 
-        // Wait for fonts to load
         if (!fontsLoaded) {
           return;
         }
 
-        // Show custom splash screen for 2 seconds
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        // Hide custom splash screen
         setShowSplash(false);
       } catch (e) {
         console.warn("Error during app preparation:", e);
@@ -53,7 +49,7 @@ export default function AppNavigator() {
     };
 
     prepare();
-  }, [fontsLoaded]); // Add fontsLoaded as dependency
+  }, [fontsLoaded]);
 
   if (showSplash || !fontsLoaded || loading) {
     return <SplashScreen />;

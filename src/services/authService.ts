@@ -19,7 +19,6 @@ export type ILoginData = {
 export const authService = {
   login: async (body: ILoginData): Promise<ApiResponse<ILoginResponse>> =>
     apiCall(axiosInstance.post("/auth/login", body)),
-
   logout: async (): Promise<void> => {
     try {
       await api.auth.logout();
@@ -29,12 +28,12 @@ export const authService = {
       await AsyncStorage.removeItem(AUTH_USER_KEY);
     }
   },
-
+  getProfile: async (): Promise<ApiResponse<IUser>> =>
+    apiCall(axiosInstance.get("/user/profile")),
   getStoredUser: async () => {
     const userStr = await AsyncStorage.getItem(AUTH_USER_KEY);
     return userStr ? JSON.parse(userStr) : null;
   },
-
   getStoredToken: async () => {
     return await AsyncStorage.getItem(AUTH_TOKEN_KEY);
   },

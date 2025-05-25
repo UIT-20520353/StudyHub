@@ -2,11 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import AnimatedModal from "../components/common/AnimatedModal";
-import { AUTH_TOKEN_KEY, AUTH_USER_KEY } from "../constants/AppConstants";
+import { AUTH_TOKEN_KEY } from "../constants/AppConstants";
 import { authService, ILoginData } from "../services/authService";
 import { IUser } from "../types/user";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
+import { Button } from "../components/common/Button";
+import { colors } from "../theme/colors";
 
 interface AuthContextData {
   user: IUser | null;
@@ -30,54 +32,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function loadStoredData() {
-    try {
-      const storedUser = await AsyncStorage.getItem(AUTH_USER_KEY);
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      console.error("Error loading stored data:", error);
-    } finally {
-      setLoading(false);
+  const getProfile = async () => {
+    const { ok, body, errors } = await authService.getProfile();
+    if (ok && body) {
+      setUser(body);
     }
+
+    if (errors) {
+      setErrorMessage(errors.message);
+      await signOut();
+    }
+  };
+
+  async function loadStoredData() {
+    const token = await authService.getStoredToken();
+    if (token) {
+      await getProfile();
+    }
+    setLoading(false);
   }
 
   const signIn = async (values: ILoginData) => {
     setSignInLoading(true);
-    try {
-      const { ok, body, errors } = await authService.login(values);
+    const { ok, body, errors } = await authService.login(values);
 
-      if (ok && body) {
-        await AsyncStorage.setItem(AUTH_TOKEN_KEY, body.token);
-        await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(body.user));
-        setUser(body.user);
-      }
-
-      if (errors) {
-        setErrorMessage(errors.message);
-      }
-    } finally {
-      setSignInLoading(false);
+    if (ok && body) {
+      await AsyncStorage.setItem(AUTH_TOKEN_KEY, body.token);
+      await getProfile();
     }
+
+    if (errors) {
+      setErrorMessage(errors.message);
+    }
+    setSignInLoading(false);
   };
 
   const signUp = async (values: any) => {
-    // const { ok, body, errors } = await authService.login(values);
-    // if (ok && body) {
-    //   await AsyncStorage.setItem(AUTH_TOKEN_KEY, body.token);
-    //   await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(body.user));
-    // }
+    // Implementation for sign up
   };
 
   const signOut = async () => {
-    try {
-      await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
-      await AsyncStorage.removeItem(AUTH_USER_KEY);
-      setUser(null);
-    } catch (error) {
-      throw new Error("Failed to sign out");
-    }
+    await authService.logout();
+    setUser(null);
   };
 
   useEffect(() => {
@@ -102,12 +98,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         onClose={() => setErrorMessage(null)}
         type="error"
       >
-        <View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "column",
+            gap: 10,
+            alignItems: "center",
+          }}
+        >
           {errorMessage && (
-            <Text style={{ fontSize: 16, textAlign: "center" }}>
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "center",
+                fontFamily: "OpenSans_400Regular",
+                color: colors.common.gray3,
+              }}
+            >
               {t(errorMessage)}
             </Text>
           )}
+          <Button
+            style={{ width: "100%" }}
+            onPress={() => setErrorMessage(null)}
+          >
+            <Text
+              style={{
+                color: colors.common.white,
+                fontFamily: "OpenSans_600SemiBold",
+                fontSize: 16,
+              }}
+            >
+              OK
+            </Text>
+          </Button>
         </View>
       </AnimatedModal>
     </AuthContext.Provider>
