@@ -48,29 +48,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {[
                 {
-                  title: "Lập trình Web",
+                  title: "Lập trình Frontend",
                   description:
-                    "Học cách xây dựng website hiện đại với React, Node.js và các công nghệ web mới nhất. Khóa học này sẽ giúp bạn trở thành một web developer chuyên nghiệp.",
+                    "Khám phá thế giới phát triển giao diện web với HTML, CSS, JavaScript và các framework hiện đại. Từ cơ bản đến nâng cao, từ responsive design đến animation.",
                 },
                 {
-                  title: "Machine Learning",
+                  title: "Tiếng Anh Giao Tiếp",
                   description:
-                    "Tìm hiểu về AI và ML. Các thuật toán cơ bản và ứng dụng thực tế.",
+                    "Luyện tập kỹ năng giao tiếp tiếng Anh hàng ngày. Các tình huống thực tế, phát âm chuẩn và ngữ pháp cơ bản.",
                 },
                 {
-                  title: "Thiết kế UI/UX",
+                  title: "Marketing Digital",
                   description:
-                    "Khóa học toàn diện về thiết kế giao diện người dùng và trải nghiệm người dùng. Học cách tạo ra các sản phẩm số đẹp mắt và dễ sử dụng. Từ wireframe đến prototype, từ research đến testing.",
+                    "Chiến lược marketing online hiệu quả. SEO, Social Media Marketing, Content Marketing và Email Marketing. Học cách xây dựng thương hiệu và tăng doanh số bán hàng.",
                 },
                 {
-                  title: "Mobile Development",
+                  title: "Thiết Kế Đồ Họa",
                   description:
-                    "Phát triển ứng dụng di động với React Native. Xây dựng app cho cả iOS và Android.",
+                    "Sáng tạo với Photoshop, Illustrator và các công cụ thiết kế chuyên nghiệp. Từ concept đến sản phẩm hoàn chỉnh.",
                 },
                 {
-                  title: "Data Science",
+                  title: "Kỹ Năng Mềm",
                   description:
-                    "Phân tích dữ liệu, trực quan hóa và machine learning. Sử dụng Python, R và các công cụ phân tích dữ liệu hiện đại. Tìm hiểu cách xử lý big data và đưa ra quyết định dựa trên dữ liệu.",
+                    "Phát triển kỹ năng giao tiếp, làm việc nhóm, quản lý thời gian và giải quyết vấn đề. Những kỹ năng cần thiết cho sự thành công trong công việc.",
                 },
               ].map((item, index) => (
                 <View key={`topic-${index}`} style={styles.topicCard}>

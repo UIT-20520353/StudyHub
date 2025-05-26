@@ -1,13 +1,14 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, {
   AxiosError,
   AxiosInstance,
-  InternalAxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
-import { ApiResponse, ApiError } from "../types/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import qs from "qs";
 import { AUTH_TOKEN_KEY } from "../constants/AppConstants";
 import { Config } from "../constants/Config";
+import { ApiError, ApiResponse } from "../types/api";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: `${Config.API_URL}/api`,
@@ -16,6 +17,7 @@ const axiosInstance: AxiosInstance = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
 });
 
 axiosInstance.interceptors.request.use(

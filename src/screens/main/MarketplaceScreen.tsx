@@ -6,13 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Text,
 } from "react-native";
-import BookCard from "../../components/book/BookCard";
-import { Book } from "../../types";
-import { NAMESPACES } from "../../i18n";
-import { useTranslation } from "../../hooks";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BookCard from "../../components/book/BookCard";
+import { useTranslation } from "../../hooks";
+import { NAMESPACES } from "../../i18n";
+import { Book } from "../../types";
 
 export default function MarketplaceScreen({ navigation }: any) {
   const { t } = useTranslation(NAMESPACES.COMMON);
@@ -54,8 +53,6 @@ export default function MarketplaceScreen({ navigation }: any) {
       <TouchableOpacity style={styles.addButton} onPress={handleAddBook}>
         <MaterialIcons name="add" size={24} color="#fff" />
       </TouchableOpacity>
-
-      <Text>{t("loading")}</Text>
     </SafeAreaView>
   );
 }

@@ -2,13 +2,13 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
 import { Form } from "../../components/common/Form";
-import { FormField } from "../../components/common/FormField";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
 import { colors } from "../../theme/colors";
 import { RootStackNavigationProp } from "../../types/navigation";
 import { Button } from "../../components/common/Button";
+import { FormField } from "../../components/common/FormField";
 
 type LoginScreenProps = {
   navigation: RootStackNavigationProp;
@@ -58,26 +58,28 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
         }) => (
           <View>
             <FormField
-              placeholder={authT("email")}
+              placeholder={authT("placeholder.email")}
               value={values.email}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               keyboardType="email-address"
               autoCapitalize="none"
               editable={!signInLoading}
-              error={errors.email}
-              touched={touched.email}
+              error={touched.email && errors.email ? errors.email : ""}
+              leftIcon="mail"
+              label={authT("label.email")}
             />
 
             <FormField
-              placeholder={authT("password")}
+              placeholder={authT("placeholder.password")}
               value={values.password}
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               secureTextEntry
               editable={!signInLoading}
-              error={errors.password}
-              touched={touched.password}
+              error={touched.password && errors.password ? errors.password : ""}
+              leftIcon="lock-closed"
+              label={authT("label.password")}
             />
 
             <Button onPress={() => handleSubmit()} disabled={signInLoading}>

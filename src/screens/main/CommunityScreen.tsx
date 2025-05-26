@@ -1,29 +1,82 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SearchInput, {
+  AdvancedSearchInput,
+} from "../../components/common/SearchInput";
 
 export default function CommunityScreen() {
+  const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState([
+    "Giải tích 1",
+    "Giáo trình Vật lý đại cương",
+    "Sách IELTS",
+    "Kinh tế vĩ mô",
+  ]);
+  const [filterTags, setFilterTags] = useState([
+    { id: "1", label: "Toán học", value: "math" },
+    { id: "2", label: "Giá < 100k", value: "price_low" },
+  ]);
+
+  const handleSearch = async (text: string) => {
+    setLoading(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(false);
+    // Update search results
+  };
+
+  const handleFilterPress = () => {
+    // Open filter modal
+  };
+
+  const handleTagRemove = (tagId: string) => {
+    setFilterTags((prev) => prev.filter((tag) => tag.id !== tagId));
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Community</Text>
-      <Text style={styles.subtitle}>Coming soon...</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <SearchInput
+        value={searchText}
+        onChangeText={setSearchText}
+        onSearch={handleSearch}
+        loading={loading}
+        suggestions={suggestions}
+        onFilterPress={handleFilterPress}
+      />
+
+      <AdvancedSearchInput
+        value={searchText}
+        onChangeText={setSearchText}
+        onSearch={handleSearch}
+        loading={loading}
+        suggestions={suggestions}
+        onFilterPress={handleFilterPress}
+        tags={filterTags}
+        onTagRemove={handleTagRemove}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#fff",
+    paddingHorizontal: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
+  searchInput: {
+    width: "100%",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
+  topicCategoryItem: {
+    width: "auto",
+    borderRadius: 10,
+    alignItems: "center",
   },
 });

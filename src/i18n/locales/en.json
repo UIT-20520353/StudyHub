@@ -38,6 +38,14 @@
     },
     "error": {
       "login_failed": "Failed to login"
+    },
+    "label": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "placeholder": {
+      "email": "Enter your email",
+      "password": "Enter your password"
     }
   },
   "tabs": {
