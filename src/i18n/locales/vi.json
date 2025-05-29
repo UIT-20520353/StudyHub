@@ -1,7 +1,7 @@
 {
   "common": {
     "app_name": "Study Hub",
-    "loading": "Đang tải...",
+    "loading": "Đang tải",
     "error": "Đã xảy ra lỗi",
     "cancel": "Hủy",
     "save": "Lưu",

@@ -4,3 +4,4 @@ export * from "./ArrowRightIcon";
 export * from "./UserIcon";
 export * from "./LikeIcon";
 export * from "./DislikeIcon";
+export * from "./CommentIcon";

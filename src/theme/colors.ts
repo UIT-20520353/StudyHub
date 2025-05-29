@@ -18,6 +18,8 @@ export const colors = {
     default: "#FFFFFF",
     paper: "#F5F9FC",
     dark: "#E3F2FD",
+    card: "#FAFBFC", // Subtle card background
+    gradient: "#F8FCFF", // Light gradient background
   },
 
   // Text colors
@@ -25,6 +27,8 @@ export const colors = {
     primary: "#2C3E50", // Dark blue-gray
     secondary: "#546E7A", // Medium blue-gray
     disabled: "#90A4AE", // Light blue-gray
+    hint: "#78909C", // Hint text
+    accent: "#37474F", // Accent text
   },
 
   // Status colors
@@ -40,6 +44,7 @@ export const colors = {
     light: "#E0E0E0",
     main: "#BDBDBD",
     dark: "#9E9E9E",
+    subtle: "#F0F4F8", // Very subtle border
   },
 
   // Common colors
@@ -48,8 +53,10 @@ export const colors = {
     black: "#000000",
     transparent: "transparent",
     gray: "#666666",
+    gray1: "#F5F7FA", // Very light gray
     gray2: "#F8F8F8",
     gray3: "#202020",
+    gray4: "#ECEFF1", // New subtle gray
     red: "#FF0000",
   },
 
@@ -59,6 +66,35 @@ export const colors = {
       main: "#7EC8E3",
       disabled: "#cccccc",
     },
+  },
+
+  // Card colors
+  card: {
+    background: "#FFFFFF",
+    shadow: "rgba(58, 87, 149, 0.08)",
+    border: "#F0F4F8",
+    hover: "#FAFBFC",
+  },
+
+  // Avatar colors
+  avatar: {
+    background: "#E8F4F8",
+    border: "#B5E0F7",
+  },
+
+  // Tag colors
+  tag: {
+    background: "#EBF8FF",
+    text: "#1E40AF",
+    border: "#BFDBFE",
+  },
+
+  // Interaction colors
+  interaction: {
+    like: "#10B981", // Green for like
+    dislike: "#6B7280", // Gray for dislike
+    comment: "#3B82F6", // Blue for comment
+    view: "#9CA3AF", // Light gray for view count
   },
 } as const;
 

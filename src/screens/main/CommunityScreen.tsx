@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchInput, {
-  AdvancedSearchInput,
-} from "../../components/common/SearchInput";
+import { Loading } from "../../components/common/Loading";
+import SearchInput from "../../components/common/SearchInput";
+import { TopicList } from "../../components/community";
+import { topicService } from "../../services/topicService";
+import { colors } from "../../theme/colors";
+import { ITopic } from "../../types/topic";
 
 export default function CommunityScreen() {
   const [searchText, setSearchText] = useState("");
@@ -14,10 +17,15 @@ export default function CommunityScreen() {
     "Sách IELTS",
     "Kinh tế vĩ mô",
   ]);
-  const [filterTags, setFilterTags] = useState([
-    { id: "1", label: "Toán học", value: "math" },
-    { id: "2", label: "Giá < 100k", value: "price_low" },
-  ]);
+
+  const [topics, setTopics] = useState<ITopic[]>([]);
+
+  const getTopics = async () => {
+    const { ok, body } = await topicService.getTopics();
+    if (ok && body) {
+      setTopics(body.items);
+    }
+  };
 
   const handleSearch = async (text: string) => {
     setLoading(true);
@@ -31,9 +39,9 @@ export default function CommunityScreen() {
     // Open filter modal
   };
 
-  const handleTagRemove = (tagId: string) => {
-    setFilterTags((prev) => prev.filter((tag) => tag.id !== tagId));
-  };
+  useEffect(() => {
+    getTopics();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,16 +54,9 @@ export default function CommunityScreen() {
         onFilterPress={handleFilterPress}
       />
 
-      <AdvancedSearchInput
-        value={searchText}
-        onChangeText={setSearchText}
-        onSearch={handleSearch}
-        loading={loading}
-        suggestions={suggestions}
-        onFilterPress={handleFilterPress}
-        tags={filterTags}
-        onTagRemove={handleTagRemove}
-      />
+      <TopicList topics={topics} />
+
+      <Loading />
     </SafeAreaView>
   );
 }
@@ -63,20 +64,7 @@ export default function CommunityScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background.gradient,
     paddingHorizontal: 16,
-  },
-  searchInput: {
-    width: "100%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-  },
-  topicCategoryItem: {
-    width: "auto",
-    borderRadius: 10,
-    alignItems: "center",
   },
 });

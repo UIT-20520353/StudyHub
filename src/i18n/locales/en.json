@@ -1,7 +1,7 @@
 {
   "common": {
     "app_name": "Study Hub",
-    "loading": "Loading...",
+    "loading": "Loading",
     "error": "An error occurred",
     "cancel": "Cancel",
     "save": "Save",

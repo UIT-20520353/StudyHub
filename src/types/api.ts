@@ -14,3 +14,11 @@ export type ApiResponse<T> =
       body: undefined;
       errors: ApiError;
     };
+
+export type ListResponse<T> = {
+  currentPage: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  items: T[];
+};

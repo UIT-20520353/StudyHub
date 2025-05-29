@@ -1,15 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import React from "react";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
 import CommunityScreen from "../screens/main/CommunityScreen";
 import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
-import SettingsStackNavigator from "./SettingsStackNavigator";
 import { colors } from "../theme/colors";
+import SettingsStackNavigator from "./SettingsStackNavigator";
 
 const Tab = createBottomTabNavigator();
+
+const SCREENS_WITHOUT_TAB_BAR = ["Language", "Profile"];
 
 export default function MainTabNavigator() {
   const { t } = useTranslation(NAMESPACES.TABS);
@@ -46,6 +49,18 @@ export default function MainTabNavigator() {
           fontFamily: "OpenSans_600SemiBold",
           fontSize: 10,
         },
+        tabBarStyle: ((route) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+
+          if (SCREENS_WITHOUT_TAB_BAR.includes(routeName)) {
+            return { display: "none" };
+          }
+
+          return {
+            display: "flex",
+            // Có thể thêm các style khác ở đây
+          };
+        })(route),
       })}
     >
       <Tab.Screen
