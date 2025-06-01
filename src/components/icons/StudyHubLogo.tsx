@@ -1,8 +1,12 @@
 import React from "react";
 import Svg, { Rect } from "react-native-svg";
 
-export const StudyHubLogo: React.FC = () => (
-  <Svg width="120" height="120" viewBox="0 0 120 120">
+interface StudyHubLogoProps {
+  size?: number;
+}
+
+export const StudyHubLogo: React.FC<StudyHubLogoProps> = ({ size = 120 }) => (
+  <Svg width={size} height={size} viewBox="0 0 120 120">
     <Rect x="0" y="0" width="120" height="120" rx="30" ry="30" fill="#2563eb" />
 
     <Rect
