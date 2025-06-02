@@ -21,6 +21,7 @@ export function Form<T extends Yup.AnyObject>({
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      enableReinitialize
     >
       {(formikProps) => (
         <View style={styles.container}>{children(formikProps)}</View>

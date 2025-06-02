@@ -41,6 +41,9 @@
     "signin_now": "Sign in now",
     "subtitle": "Learning platform for students",
     "login_description": "Login to continue using StudyHub",
+    "otp_subtitle": "Verify your account",
+    "verify_account": "Verify Account",
+    "otp_description": "We've sent a verification code to your email",
     "validation": {
       "invalid_email": "Invalid email address",
       "email_required": "Email is required",
@@ -51,7 +54,9 @@
       "full_name_required": "Full name is required",
       "university_required": "Please select your university",
       "year_format": "Year must be a valid number",
-      "phone_format": "Invalid phone number format"
+      "phone_format": "Invalid phone number format",
+      "otp_format": "OTP must be 6 digits",
+      "otp_required": "OTP is required"
     },
     "error": {
       "login_failed": "Failed to login"
@@ -65,7 +70,8 @@
       "university": "University",
       "student_id": "Student ID",
       "major": "Major",
-      "year": "Year"
+      "year": "Year",
+      "otp": "OTP Code"
     },
     "placeholder": {
       "email": "Enter your email",
@@ -76,8 +82,16 @@
       "university": "Select your university",
       "student_id": "Enter your student ID",
       "major": "Enter your major",
-      "year": "Enter your year"
-    }
+      "year": "Enter your year",
+      "otp": "Enter OTP code"
+    },
+    "resend_otp_in": "Resend code in",
+    "sending_otp": "Sending OTP...",
+    "resend_otp": "Resend OTP",
+    "verifying": "Verifying...",
+    "verify_otp": "Verify OTP",
+    "not_received_otp": "Didn't receive the code?",
+    "change_email": "Change email"
   },
   "tabs": {
     "home": "Home",

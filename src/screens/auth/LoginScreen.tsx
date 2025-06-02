@@ -127,7 +127,14 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
                     label={authT("label.password")}
                   />
 
-                  <TouchableOpacity style={styles.forgotPassword}>
+                  <TouchableOpacity
+                    style={styles.forgotPassword}
+                    onPress={() =>
+                      navigation.navigate("OTPVerification", {
+                        email: values.email,
+                      })
+                    }
+                  >
                     <Text style={styles.forgotPasswordText}>
                       {authT("forgot_password")}
                     </Text>

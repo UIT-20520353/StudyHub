@@ -7,6 +7,10 @@ export type RootStackParamList = {
   Profile: undefined;
   Chat: undefined;
   Language: undefined;
+  OTPVerification: {
+    email: string;
+    userId?: string;
+  };
 };
 
 export type RootStackNavigationProp = StackNavigationProp<RootStackParamList>;

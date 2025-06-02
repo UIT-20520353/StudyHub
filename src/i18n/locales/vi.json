@@ -39,6 +39,9 @@
     "creating_account": "Đang tạo tài khoản...",
     "have_account": "Đã có tài khoản?",
     "signin_now": "Đăng nhập ngay",
+    "otp_subtitle": "Xác thực tài khoản của bạn",
+    "verify_account": "Xác thực tài khoản",
+    "otp_description": "Chúng tôi đã gửi mã xác thực đến email của bạn",
     "validation": {
       "invalid_email": "Email không hợp lệ",
       "email_required": "Vui lòng nhập email",
@@ -49,7 +52,9 @@
       "full_name_required": "Vui lòng nhập họ và tên",
       "university_required": "Vui lòng chọn trường đại học",
       "year_format": "Năm học không hợp lệ",
-      "phone_format": "Số điện thoại không hợp lệ"
+      "phone_format": "Số điện thoại không hợp lệ",
+      "otp_format": "Mã OTP phải có 6 chữ số",
+      "otp_required": "Vui lòng nhập mã OTP"
     },
     "error": {
       "login_failed": "Đăng nhập thất bại"
@@ -63,7 +68,8 @@
       "university": "Trường đại học",
       "student_id": "Mã sinh viên",
       "major": "Ngành học",
-      "year": "Năm học"
+      "year": "Năm học",
+      "otp": "Mã OTP"
     },
     "placeholder": {
       "email": "Nhập email",
@@ -74,10 +80,18 @@
       "university": "Chọn trường đại học",
       "student_id": "Nhập mã sinh viên",
       "major": "Nhập ngành học",
-      "year": "Nhập năm học"
+      "year": "Nhập năm học",
+      "otp": "Nhập mã OTP"
     },
     "subtitle": "Nền tảng học tập cho sinh viên",
-    "login_description": "Đăng nhập để tiếp tục sử dụng StudyHub"
+    "login_description": "Đăng nhập để tiếp tục sử dụng StudyHub",
+    "resend_otp_in": "Gửi lại mã sau",
+    "sending_otp": "Đang gửi OTP...",
+    "resend_otp": "Gửi lại OTP",
+    "verifying": "Đang xác thực...",
+    "verify_otp": "Xác thực OTP",
+    "not_received_otp": "Không nhận được mã?",
+    "change_email": "Thay đổi email"
   },
   "tabs": {
     "home": "Trang chủ",
