@@ -6,6 +6,7 @@ import AuthNavigator from "./AuthNavigator";
 import SplashScreen from "../screens/static/SplashScreen";
 import { useAuth } from "../contexts/AuthContext";
 import * as ExpoSplashScreen from "expo-splash-screen";
+import { RootStackParamList } from "../types/navigation";
 
 import {
   OpenSans_400Regular,
@@ -18,7 +19,7 @@ import {
 // Prevent the splash screen from auto-hiding
 ExpoSplashScreen.preventAutoHideAsync();
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
   const { isAuthenticated, loading } = useAuth();

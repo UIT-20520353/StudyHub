@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   View,
   TouchableOpacity,
@@ -15,8 +15,8 @@ import { fonts } from "../../theme/fonts";
 import { IUniversity } from "../../types/university";
 
 interface UniversitySelectorProps {
-  value?: IUniversity | null;
-  onSelect: (university: IUniversity) => void;
+  value?: number | null;
+  onSelect: (universityId: number) => void;
   placeholder?: string;
   error?: string;
   label?: string;
@@ -33,27 +33,39 @@ export const UniversitySelector: React.FC<UniversitySelectorProps> = ({
   required = false,
   universities,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
+
+  const selectedUniversity = useMemo(() => {
+    if (!value) return null;
+    return universities.find((university) => university.id === value) || null;
+  }, [value, universities]);
 
   const filteredUniversities = universities.filter(
     (university) =>
       university.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      university.shortName.toLowerCase().includes(searchText.toLowerCase()) ||
-      university.city.toLowerCase().includes(searchText.toLowerCase())
+      university.shortName.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const handleSelect = (university: IUniversity) => {
-    onSelect(university);
+    onSelect(university.id);
     setModalVisible(false);
     setSearchText("");
   };
+
+  // Safe error rendering
+  const safeError =
+    typeof error === "string"
+      ? error
+      : error && typeof error === "object"
+      ? "Validation error"
+      : "";
 
   const renderUniversityItem = ({ item }: { item: IUniversity }) => (
     <TouchableOpacity
       style={[
         styles.universityItem,
-        value?.id === item.id && styles.selectedUniversityItem,
+        value === item.id && styles.selectedUniversityItem,
       ]}
       onPress={() => handleSelect(item)}
     >
@@ -63,7 +75,7 @@ export const UniversitySelector: React.FC<UniversitySelectorProps> = ({
           {item.shortName} • {item.city}
         </Text>
       </View>
-      {value?.id === item.id && (
+      {value === item.id && (
         <Ionicons
           name="checkmark-circle"
           size={20}
@@ -83,14 +95,16 @@ export const UniversitySelector: React.FC<UniversitySelectorProps> = ({
       )}
 
       <TouchableOpacity
-        style={[styles.selector, error && styles.selectorError]}
+        style={[styles.selector, safeError && styles.selectorError]}
         onPress={() => setModalVisible(true)}
         activeOpacity={0.7}
       >
         <View style={styles.selectorContent}>
-          {value ? (
+          {selectedUniversity ? (
             <View style={styles.selectedValue}>
-              <Text style={styles.selectedText}>{value.name}</Text>
+              <Text style={styles.selectedText} numberOfLines={1}>
+                {selectedUniversity.name}
+              </Text>
             </View>
           ) : (
             <Text style={styles.placeholder}>{placeholder}</Text>
@@ -99,16 +113,16 @@ export const UniversitySelector: React.FC<UniversitySelectorProps> = ({
         <Ionicons
           name="chevron-down"
           size={20}
-          color={error ? colors.common.red : colors.text.secondary}
+          color={safeError ? colors.common.red : colors.text.secondary}
         />
       </TouchableOpacity>
 
-      {error && (
+      {safeError ? (
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle" size={14} color={colors.common.red} />
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={styles.errorText}>{safeError}</Text>
         </View>
-      )}
+      ) : null}
 
       <Modal
         animationType="slide"

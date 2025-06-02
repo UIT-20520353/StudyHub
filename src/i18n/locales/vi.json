@@ -9,7 +9,15 @@
     "edit": "Sửa",
     "confirm": "Xác nhận",
     "search": "Tìm kiếm",
-    "filter": "Lọc"
+    "filter": "Lọc",
+    "error_title": "Lỗi",
+    "success_title": "Thành công"
+  },
+  "button": {
+    "ok": "OK",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "verify": "Xác thực"
   },
   "auth": {
     "login": "Đăng nhập",
@@ -163,9 +171,35 @@
   },
   "api": {
     "error": {
+      "internal-server": "Lỗi máy chủ",
       "validate": {
         "login": {
           "invalid-credential": "Email hoặc mật khẩu không đúng"
+        },
+        "email": {
+          "domain-mismatch": "Email không khớp với trường đại học"
+        }
+      },
+      "user": {
+        "already-exists": "Tài khoản đã tồn tại"
+      },
+      "account": {
+        "not-verified": "Tài khoản chưa được xác thực"
+      },
+      "verification": {
+        "code": {
+          "exists": "Mã xác thực đã được gửi"
+        }
+      },
+      "email": {
+        "already-verified": "Email đã được xác thực"
+      }
+    },
+    "success": {
+      "login": "Đăng nhập thành công!",
+      "verification": {
+        "code": {
+          "verified": "Tài khoản đã được xác thực thành công!"
         }
       }
     }

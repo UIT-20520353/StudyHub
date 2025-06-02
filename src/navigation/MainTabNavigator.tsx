@@ -9,8 +9,9 @@ import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
 import { colors } from "../theme/colors";
 import SettingsStackNavigator from "./SettingsStackNavigator";
+import { MainTabParamList } from "../types/navigation";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const SCREENS_WITHOUT_TAB_BAR = ["Language", "Profile"];
 
@@ -58,7 +59,6 @@ export default function MainTabNavigator() {
 
           return {
             display: "flex",
-            // Có thể thêm các style khác ở đây
           };
         })(route),
       })}

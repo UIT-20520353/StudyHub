@@ -9,12 +9,29 @@ export interface ILoginResponse {
   token: string;
   tokenType: string;
   user: IUser;
+  message: string;
 }
 
-export type ILoginData = {
+export interface ILoginData {
   email: string;
   password: string;
-};
+}
+
+export interface IVerifyEmailData {
+  code: string;
+  userId: number;
+}
+
+export interface IRegisterData {
+  email: string;
+  password: string;
+  fullName: string;
+  studentId?: string;
+  universityId: number;
+  major?: string;
+  year?: number;
+  phone?: string;
+}
 
 export const authService = {
   login: async (body: ILoginData): Promise<ApiResponse<ILoginResponse>> =>
@@ -37,4 +54,18 @@ export const authService = {
   getStoredToken: async () => {
     return await AsyncStorage.getItem(AUTH_TOKEN_KEY);
   },
+  register: async (body: IRegisterData): Promise<ApiResponse<IUser>> =>
+    apiCall(axiosInstance.post("/auth/register", body)),
+  sendVerificationEmail: async (userId: number): Promise<ApiResponse<IUser>> =>
+    apiCall(axiosInstance.get(`/auth/verify-email/${userId}`)),
+  resendVerificationEmail: async (
+    userId: number
+  ): Promise<ApiResponse<undefined>> =>
+    apiCall(
+      axiosInstance.post("/auth/resend-verification", {
+        userId,
+      })
+    ),
+  verifyEmail: async (body: IVerifyEmailData): Promise<ApiResponse<IUser>> =>
+    apiCall(axiosInstance.post("/auth/verify-email", body)),
 };

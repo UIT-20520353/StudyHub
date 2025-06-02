@@ -16,36 +16,51 @@ import { Button } from "../../components/common/Button";
 import { Form } from "../../components/common/Form";
 import { FormField } from "../../components/common/FormField";
 import { LanguageSelector } from "../../components/common/LanguageSelector";
+import MessageModal from "../../components/common/MessageModal";
 import { StudyHubLogo } from "../../components/icons";
-import { EUniversityStatus } from "../../enums/university";
+import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
 import { universityService } from "../../services/universityService";
 import { colors, withOpacity } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
-import { RootStackNavigationProp } from "../../types/navigation";
+import { AuthStackNavigationProp } from "../../types/navigation";
 import { IUniversity } from "../../types/university";
+import { IUser } from "../../types/user";
 
 type RegisterScreenProps = {
-  navigation: RootStackNavigationProp;
+  navigation: AuthStackNavigationProp;
 };
 
-interface RegisterFormValues {
+const safeErrorMessage = (error: any): string => {
+  if (!error) return "";
+  if (typeof error === "string") return error;
+  if (typeof error === "object" && error.message) {
+    return typeof error.message === "string"
+      ? error.message
+      : "Validation error";
+  }
+  return "";
+};
+
+export interface RegisterFormValues {
   email: string;
   password: string;
   confirmPassword: string;
   fullName: string;
   studentId: string | undefined;
-  university: IUniversity | null;
+  universityId: number;
   major: string | undefined;
   year: string | undefined;
   phone: string | undefined;
 }
 
 export default function RegisterScreen({ navigation }: RegisterScreenProps) {
+  const { signUp, signUpLoading: isLoading } = useAuth();
+
   const { t: authT } = useTranslation(NAMESPACES.AUTH);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [universities, setUniversities] = useState<IUniversity[]>([]);
+  const [successModal, setSuccessModal] = useState(false);
 
   const getUniversities = useCallback(async () => {
     const { body, errors, ok } = await universityService.getUniversities();
@@ -68,24 +83,9 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
       .oneOf([Yup.ref("password")], authT("validation.password_not_match"))
       .required(authT("validation.confirm_password_required")),
     fullName: Yup.string().required(authT("validation.full_name_required")),
-    university: Yup.object()
-      .shape({
-        id: Yup.number().required(),
-        name: Yup.string().required(),
-        shortName: Yup.string().required(),
-        address: Yup.string().required(),
-        emailDomain: Yup.string().required(),
-        city: Yup.string().required(),
-        website: Yup.string().required(),
-        logoUrl: Yup.string().required(),
-        description: Yup.string().required(),
-        status: Yup.string().oneOf(Object.values(EUniversityStatus)).required(),
-        isActive: Yup.boolean().required(),
-        createdAt: Yup.string().required(),
-        updatedAt: Yup.string().required(),
-      })
-      .nullable()
-      .required(authT("validation.university_required")),
+    universityId: Yup.number().required(
+      authT("validation.university_required")
+    ),
     studentId: Yup.string(),
     major: Yup.string(),
     year: Yup.string().matches(/^\d{0,4}$/, authT("validation.year_format")),
@@ -99,33 +99,13 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     values: RegisterFormValues,
     helpers: any
   ): Promise<void> => {
-    setIsLoading(true);
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const registerData = {
-        email: values.email,
-        password: values.password,
-        fullName: values.fullName,
-        studentId: values.studentId || undefined,
-        universityId: values.university?.id,
-        major: values.major || undefined,
-        year: values.year ? parseInt(values.year) : undefined,
-        phone: values.phone || undefined,
-      };
-
-      console.log("Register data:", registerData);
-
-      // Navigate to login or main app
-      navigation.navigate("Login");
-    } catch (error) {
-      console.error("Registration error:", error);
-    } finally {
-      setIsLoading(false);
-      helpers.setSubmitting(false);
-    }
+    await signUp(values, (user: IUser) => {
+      navigation.navigate("OTPVerification", {
+        email: user.email,
+        userId: user.id,
+      });
+    });
+    helpers.setSubmitting(false);
   };
 
   useEffect(() => {
@@ -178,7 +158,8 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
                   confirmPassword: "",
                   fullName: "",
                   studentId: "",
-                  university: null,
+                  universityId:
+                    universities.length > 0 ? universities[0].id : -1,
                   major: "",
                   year: "",
                   phone: "",
@@ -291,16 +272,16 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
                     </View>
 
                     <UniversitySelector
-                      value={values.university}
-                      onSelect={(university) =>
-                        setFieldValue("university", university)
-                      }
+                      value={values.universityId} // Thay đổi từ values.university thành values.universityId
+                      onSelect={(universityId) => {
+                        setFieldValue("universityId", universityId); // Thay đổi từ university thành universityId
+                      }}
                       placeholder={authT("placeholder.university")}
-                      error={
-                        touched.university && errors.university
-                          ? errors.university
+                      error={safeErrorMessage(
+                        touched.universityId && errors.universityId
+                          ? errors.universityId
                           : ""
-                      }
+                      )}
                       label={authT("label.university")}
                       universities={universities}
                       required
@@ -377,6 +358,16 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
                 </Text>
               </TouchableOpacity>
             </View>
+
+            <MessageModal
+              visible={successModal}
+              onClose={() => setSuccessModal(false)}
+              type="info"
+              title="Thành công!"
+              message="Đăng bán sách của bạn đã được thêm thành công."
+              okText="Tuyệt vời"
+              backdropDismissible={false}
+            />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

@@ -4,12 +4,12 @@ export interface IUniversity {
   id: number;
   name: string;
   shortName: string;
-  address: string;
+  address?: string;
   emailDomain: string;
-  city: string;
-  website: string;
-  logoUrl: string;
-  description: string;
+  city?: string;
+  website?: string;
+  logoUrl?: string;
+  description?: string;
   status: EUniversityStatus;
   isActive: boolean;
   createdAt: string;

@@ -9,7 +9,15 @@
     "edit": "Edit",
     "confirm": "Confirm",
     "search": "Search",
-    "filter": "Filter"
+    "filter": "Filter",
+    "error_title": "Error",
+    "success_title": "Success"
+  },
+  "button": {
+    "ok": "OK",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "verify": "Verify"
   },
   "auth": {
     "login": "Login",
@@ -163,9 +171,35 @@
   },
   "api": {
     "error": {
+      "internal-server": "Internal server error",
       "validate": {
         "login": {
           "invalid-credential": "Invalid email or password"
+        },
+        "email": {
+          "domain-mismatch": "Email domain mismatch with university"
+        }
+      },
+      "user": {
+        "already-exists": "Account already exists"
+      },
+      "account": {
+        "not-verified": "Account not verified"
+      },
+      "verification": {
+        "code": {
+          "exists": "Verification code already exists"
+        }
+      },
+      "email": {
+        "already-verified": "Email already verified"
+      }
+    },
+    "success": {
+      "login": "Login successful!",
+      "verification": {
+        "code": {
+          "verified": "Account verified successfully!"
         }
       }
     }

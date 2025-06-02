@@ -13,19 +13,24 @@ import { Button } from "../../components/common/Button";
 import { Form } from "../../components/common/Form";
 import { FormField } from "../../components/common/FormField";
 import { LanguageSelector } from "../../components/common/LanguageSelector";
+import MessageModal, {
+  MessageModalProps,
+} from "../../components/common/MessageModal";
 import { StudyHubLogo } from "../../components/icons";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
+import { authService } from "../../services/authService";
 import { colors, withOpacity } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
-import { RootStackNavigationProp } from "../../types/navigation";
+import { AuthStackNavigationProp } from "../../types/navigation";
+import { IUser } from "../../types/user";
 
 type OTPVerificationScreenProps = {
-  navigation: RootStackNavigationProp;
+  navigation: AuthStackNavigationProp;
   route: {
     params: {
       email: string;
-      userId?: string;
+      userId: number;
     };
   };
 };
@@ -39,12 +44,66 @@ export default function OTPVerificationScreen({
   route,
 }: OTPVerificationScreenProps) {
   const { t: authT } = useTranslation(NAMESPACES.AUTH);
+  const { t: commonT } = useTranslation(NAMESPACES.COMMON);
+  const { t: buttonT } = useTranslation(NAMESPACES.BUTTON);
+  const { t: apiT } = useTranslation(NAMESPACES.API);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isResending, setIsResending] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(60);
   const [canResend, setCanResend] = useState<boolean>(false);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(false);
+  const [errorModalState, setErrorModalState] = useState<MessageModalProps>({
+    visible: false,
+    message: "",
+    type: "error",
+    title: commonT("error_title"),
+  });
+  const [successModalState, setSuccessModalState] = useState<MessageModalProps>(
+    {
+      visible: false,
+      message: "",
+      type: "success",
+      title: commonT("success_title"),
+    }
+  );
 
-  const { email } = route.params;
+  const { email, userId } = route.params;
+
+  const onCloseErrorModal = () => {
+    setErrorModalState((prev) => ({
+      ...prev,
+      visible: false,
+      okText: buttonT("ok"),
+      onOk: undefined,
+      backdropDismissible: true,
+    }));
+  };
+  const onCloseSuccessModal = () => {
+    setSuccessModalState((prev) => ({
+      ...prev,
+      visible: false,
+      onOk: undefined,
+      backdropDismissible: true,
+    }));
+  };
+
+  const sendVerificationEmail = async () => {
+    setIsLoadingUser(true);
+    const { ok, body, errors } = await authService.sendVerificationEmail(
+      userId
+    );
+    if (ok) {
+      setUser(body);
+    } else {
+      setErrorModalState((prev) => ({
+        ...prev,
+        message: apiT(errors.message),
+        visible: true,
+      }));
+    }
+    setIsLoadingUser(false);
+  };
 
   const OTPSchema = Yup.object().shape({
     otp: Yup.string()
@@ -56,55 +115,63 @@ export default function OTPVerificationScreen({
     values: OTPFormValues,
     helpers: any
   ): Promise<void> => {
+    if (!user) return;
+
     setIsLoading(true);
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    const { ok, errors } = await authService.verifyEmail({
+      code: values.otp,
+      userId: user.id,
+    });
 
-      const verifyData = {
-        email: email,
-        otp: values.otp,
-        userId: route.params.userId,
-      };
-
-      console.log("OTP Verification data:", verifyData);
-
-      // Navigate to success screen or main app
-      // navigation.navigate("Login");
-    } catch (error) {
-      console.error("OTP verification error:", error);
-    } finally {
-      setIsLoading(false);
-      helpers.setSubmitting(false);
+    if (ok) {
+      setSuccessModalState((prev) => ({
+        ...prev,
+        message: apiT("success.verification.code.verified"),
+        visible: true,
+        backdropDismissible: false,
+        onOk: () => {
+          onCloseSuccessModal();
+          navigation.navigate("Login");
+        },
+      }));
+    } else {
+      setErrorModalState((prev) => ({
+        ...prev,
+        message: apiT(errors.message),
+        visible: true,
+      }));
     }
+
+    setIsLoading(false);
+    helpers.setSubmitting(false);
   };
 
   const handleResendOTP = async (): Promise<void> => {
     if (!canResend) return;
 
     setIsResending(true);
-    setCanResend(false);
-    setCountdown(60);
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    const { ok, errors } = await authService.resendVerificationEmail(userId);
 
-      const resendData = {
-        email: email,
-        userId: route.params.userId,
-      };
-
-      console.log("Resend OTP data:", resendData);
-    } catch (error) {
-      console.error("Resend OTP error:", error);
-    } finally {
-      setIsResending(false);
+    if (!ok) {
+      setErrorModalState((prev) => ({
+        ...prev,
+        message: apiT(errors.message),
+        visible: true,
+      }));
+    } else {
+      setCanResend(false);
+      setCountdown(60);
+      startCountdown();
     }
+
+    setIsResending(false);
   };
 
   const startCountdown = useCallback(() => {
+    if (!user) return;
+
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -117,7 +184,7 @@ export default function OTPVerificationScreen({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [user]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -140,6 +207,10 @@ export default function OTPVerificationScreen({
     return cleanup;
   }, [startCountdown]);
 
+  useEffect(() => {
+    sendVerificationEmail();
+  }, [userId]);
+
   return (
     <LinearGradient
       colors={[colors.primary.main, colors.primary.dark, colors.secondary.dark]}
@@ -153,6 +224,9 @@ export default function OTPVerificationScreen({
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          <MessageModal {...errorModalState} onClose={onCloseErrorModal} />
+          <MessageModal {...successModalState} onClose={onCloseSuccessModal} />
+
           <View style={styles.languageSelectorContainer}>
             <LanguageSelector isDarkBackground={true} />
           </View>
@@ -160,7 +234,7 @@ export default function OTPVerificationScreen({
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
-            disabled={isLoading}
+            disabled={isLoading || isLoadingUser}
           >
             <Text style={styles.backButtonText}>←</Text>
           </TouchableOpacity>
@@ -203,7 +277,7 @@ export default function OTPVerificationScreen({
                     onBlur={handleBlur("otp")}
                     keyboardType="numeric"
                     maxLength={6}
-                    editable={!isLoading}
+                    editable={!isLoading && !isLoadingUser}
                     error={touched.otp && errors.otp ? errors.otp : ""}
                     leftIcon="key"
                     label={authT("label.otp")}
@@ -232,10 +306,14 @@ export default function OTPVerificationScreen({
                   <View style={styles.buttonContainer}>
                     <Button
                       onPress={() => handleSubmit()}
-                      disabled={isLoading || values.otp.length !== 6}
+                      disabled={
+                        isLoading || values.otp.length !== 6 || isLoadingUser
+                      }
                       style={[
                         styles.verifyButton,
-                        (isLoading || values.otp.length !== 6) &&
+                        (isLoading ||
+                          values.otp.length !== 6 ||
+                          isLoadingUser) &&
                           styles.disabledButton,
                       ]}
                     >
@@ -255,7 +333,7 @@ export default function OTPVerificationScreen({
               <Text style={styles.footerText}>{authT("not_received_otp")}</Text>
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
-                disabled={isLoading}
+                disabled={isLoading || isLoadingUser}
               >
                 <Text style={styles.changeEmailText}>
                   {authT("change_email")}

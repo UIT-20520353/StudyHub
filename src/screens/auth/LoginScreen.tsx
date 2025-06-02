@@ -19,10 +19,11 @@ import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
 import { colors, withOpacity } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
-import { RootStackNavigationProp } from "../../types/navigation";
+import { AuthStackNavigationProp } from "../../types/navigation";
+import { IUser } from "../../types/user";
 
 type LoginScreenProps = {
-  navigation: RootStackNavigationProp;
+  navigation: AuthStackNavigationProp;
 };
 
 interface LoginFormValues {
@@ -47,7 +48,12 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
     values: LoginFormValues,
     helpers: any
   ): Promise<void> => {
-    await signIn(values);
+    await signIn(values, (user: IUser) => {
+      navigation.navigate("OTPVerification", {
+        email: user.email,
+        userId: user.id,
+      });
+    });
     helpers.setSubmitting(false);
   };
 
@@ -127,14 +133,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
                     label={authT("label.password")}
                   />
 
-                  <TouchableOpacity
-                    style={styles.forgotPassword}
-                    onPress={() =>
-                      navigation.navigate("OTPVerification", {
-                        email: values.email,
-                      })
-                    }
-                  >
+                  <TouchableOpacity style={styles.forgotPassword}>
                     <Text style={styles.forgotPasswordText}>
                       {authT("forgot_password")}
                     </Text>
