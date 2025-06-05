@@ -17,6 +17,11 @@ export type MainTabParamList = {
   Marketplace: undefined;
   Community: undefined;
   Settings: undefined;
+  TopicList: undefined;
+  CreateTopic: undefined;
+  TopicDetail: {
+    topicId: number;
+  };
 };
 
 // Settings Stack Types

@@ -1,8 +1,10 @@
+import { ETopicReaction, ETopicVisibility } from "../enums/topic";
+
 interface IAuthor {
   id: number;
   fullName: string;
   avatarUrl: string;
-  university: string;
+  university: IUniversity;
   major: string;
   year: number;
 }
@@ -29,7 +31,7 @@ interface IAttachment {
 
 interface IUserInteraction {
   isFollowing: boolean;
-  userReaction: string;
+  userReaction: ETopicReaction;
   isAuthor: boolean;
 }
 
@@ -43,13 +45,13 @@ export interface ITopic {
   dislikeCount: number;
   status: string;
   isLocked: boolean;
-  visibility: string;
+  visibility: ETopicVisibility;
   createdAt: string;
   updatedAt: string;
   lastActivityAt: string;
   author: IAuthor;
-  category: ICategory;
-  university: IUniversity;
+  categories: ICategory[];
+  university: IUniversity | null;
   attachments: IAttachment[];
-  userInteraction: IUserInteraction;
+  userInteraction: IUserInteraction | null;
 }

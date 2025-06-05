@@ -1,13 +1,21 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import { CommentIcon, DislikeIcon, LikeIcon } from "../../components/icons";
 import { colors } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
 import { ITopic } from "../../types/topic";
+import { ETopicReaction } from "../../enums/topic";
 
 interface TopicItemProps {
   topic: ITopic;
-  onTopicPress?: (topic: ITopic) => void;
+  onTopicPress: (topic: ITopic) => void;
 }
 
 export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
@@ -44,13 +52,30 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
     return num.toString();
   };
 
+  const renderCategories = () => {
+    if (!topic.categories || topic.categories.length === 0) {
+      return null;
+    }
+
+    return (
+      <View style={styles.categoryScrollContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryScrollContent}
+        >
+          {topic.categories.map((cat) => (
+            <View key={cat.id} style={styles.categoryTag}>
+              <Text style={styles.categoryText}>{cat.name}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    );
+  };
+
   return (
-    <TouchableOpacity
-      key={topic.id}
-      style={styles.topicCard}
-      onPress={() => onTopicPress?.(topic)}
-      activeOpacity={0.8}
-    >
+    <View key={topic.id} style={styles.topicCard}>
       {/* Header */}
       <View style={styles.topicHeader}>
         <View style={styles.authorInfo}>
@@ -68,39 +93,34 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
             </Text>
             <View style={styles.authorMetaRow}>
               <Text style={styles.authorMeta} numberOfLines={1}>
-                {topic.author.major}
-              </Text>
-              <View style={styles.dot} />
-              <Text style={styles.universityText} numberOfLines={1}>
-                {topic.university?.shortName || topic.university?.name}
+                {topic.author.major && `${topic.author.major} • `}
+                {topic.author.university.shortName}
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.timeContainer}>
-          <Text style={styles.timeAgo}>{formatTimeAgo(topic.updatedAt)}</Text>
+          <Text style={styles.timeAgo}>{formatTimeAgo(topic.createdAt)}</Text>
         </View>
       </View>
-
       {/* Content */}
-      <View style={styles.topicContent}>
-        <Text style={styles.topicTitle} numberOfLines={2}>
-          {topic.title}
-        </Text>
-        <Text style={styles.topicDescription} numberOfLines={3}>
-          {topic.content}
-        </Text>
-      </View>
 
-      {/* Category */}
-      {topic.category && (
-        <View style={styles.categoryContainer}>
-          <View style={styles.categoryTag}>
-            <Text style={styles.categoryText}>{topic.category.name}</Text>
-          </View>
+      <TouchableOpacity
+        style={styles.topicContentContainer}
+        activeOpacity={0.8}
+        onPress={() => onTopicPress(topic)}
+      >
+        <View style={styles.topicContent}>
+          <Text style={styles.topicTitle} numberOfLines={2}>
+            {topic.title}
+          </Text>
+          <Text style={styles.topicDescription} numberOfLines={3}>
+            {topic.content}
+          </Text>
         </View>
-      )}
-
+      </TouchableOpacity>
+      {/* Categories */}
+      {renderCategories()}
       {/* Attachments indicator */}
       {topic.attachments && topic.attachments.length > 0 && (
         <View style={styles.attachmentContainer}>
@@ -112,18 +132,53 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
           </View>
         </View>
       )}
-
       {/* Footer Stats */}
       <View style={styles.topicFooter}>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <LikeIcon color={colors.interaction.like} size={16} />
-            <Text style={styles.likeText}>{formatNumber(topic.likeCount)}</Text>
+            <LikeIcon
+              color={
+                topic.userInteraction &&
+                topic.userInteraction.userReaction === ETopicReaction.LIKE
+                  ? colors.interaction.like
+                  : colors.interaction.dislike
+              }
+              size={16}
+            />
+            <Text
+              style={[
+                styles.likeText,
+                topic.userInteraction &&
+                  topic.userInteraction.userReaction ===
+                    ETopicReaction.LIKE && {
+                    color: colors.interaction.like,
+                  },
+              ]}
+            >
+              {formatNumber(topic.likeCount)}
+            </Text>
           </View>
 
           <View style={styles.statItem}>
-            <DislikeIcon color={colors.interaction.dislike} size={16} />
-            <Text style={styles.dislikeText}>
+            <DislikeIcon
+              color={
+                topic.userInteraction &&
+                topic.userInteraction.userReaction === ETopicReaction.DISLIKE
+                  ? colors.interaction.like
+                  : colors.interaction.dislike
+              }
+              size={16}
+            />
+            <Text
+              style={[
+                styles.dislikeText,
+                topic.userInteraction &&
+                  topic.userInteraction.userReaction ===
+                    ETopicReaction.DISLIKE && {
+                    color: colors.interaction.like,
+                  },
+              ]}
+            >
               {formatNumber(topic.dislikeCount)}
             </Text>
           </View>
@@ -140,7 +195,7 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
           {formatNumber(topic.viewCount)} lượt xem
         </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -226,6 +281,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.text.hint,
   },
+  topicContentContainer: {
+    flex: 1,
+  },
   topicContent: {
     gap: 8,
   },
@@ -241,8 +299,13 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     lineHeight: 22,
   },
-  categoryContainer: {
+  categoryScrollContainer: {
+    height: 36,
+  },
+  categoryScrollContent: {
     flexDirection: "row",
+    gap: 8,
+    paddingRight: 16,
   },
   categoryTag: {
     backgroundColor: colors.tag.background,
@@ -251,6 +314,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.tag.border,
+    alignSelf: "flex-start",
   },
   categoryText: {
     fontFamily: fonts.openSans.semiBold,
@@ -298,7 +362,7 @@ const styles = StyleSheet.create({
   likeText: {
     fontFamily: fonts.openSans.semiBold,
     fontSize: 13,
-    color: colors.interaction.like,
+    color: colors.interaction.dislike,
   },
   dislikeText: {
     fontFamily: fonts.openSans.medium,
@@ -317,7 +381,7 @@ const styles = StyleSheet.create({
   commentText: {
     fontFamily: fonts.openSans.medium,
     fontSize: 13,
-    color: colors.interaction.comment,
+    color: colors.interaction.dislike,
   },
   viewCount: {
     fontFamily: fonts.openSans.regular,

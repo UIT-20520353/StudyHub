@@ -1,13 +1,11 @@
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { colors } from "../../theme/colors";
-import { fonts } from "../../theme/fonts";
 import { ITopic } from "../../types/topic";
 import { TopicItem } from "./TopicItem";
 
 interface TopicListProps {
   topics: ITopic[];
-  onTopicPress?: (topic: ITopic) => void;
+  onTopicPress: (topic: ITopic) => void;
 }
 
 export const TopicList: React.FC<TopicListProps> = ({
@@ -25,7 +23,7 @@ export const TopicList: React.FC<TopicListProps> = ({
           <TopicItem
             key={`topic-${topic.id}`}
             topic={topic}
-            onTopicPress={onTopicPress}
+            onTopicPress={() => onTopicPress(topic)}
           />
         ))}
       </ScrollView>

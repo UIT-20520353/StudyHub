@@ -4,16 +4,21 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import React from "react";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
-import CommunityScreen from "../screens/main/CommunityScreen";
+import CommunityStackNavigator from "./CommunityStackNavigator";
 import HomeScreen from "../screens/main/HomeScreen";
 import MarketplaceScreen from "../screens/main/MarketplaceScreen";
 import { colors } from "../theme/colors";
-import SettingsStackNavigator from "./SettingsStackNavigator";
 import { MainTabParamList } from "../types/navigation";
+import SettingsStackNavigator from "./SettingsStackNavigator";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const SCREENS_WITHOUT_TAB_BAR = ["Language", "Profile"];
+const SCREENS_WITHOUT_TAB_BAR = [
+  "Language",
+  "Profile",
+  "TopicDetail",
+  "CreateTopic",
+];
 
 export default function MainTabNavigator() {
   const { t } = useTranslation(NAMESPACES.TABS);
@@ -75,7 +80,7 @@ export default function MainTabNavigator() {
       />
       <Tab.Screen
         name="Community"
-        component={CommunityScreen}
+        component={CommunityStackNavigator}
         options={{ title: t("community") }}
       />
       <Tab.Screen

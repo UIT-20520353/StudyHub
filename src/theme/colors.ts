@@ -13,6 +13,13 @@ export const colors = {
     dark: "#90CAF9", // Medium blue
   },
 
+  warning: {
+    main: "#F59E0B",
+    dark: "#D97706",
+    background: "#FEF3C7",
+    border: "#FDE68A",
+  },
+
   // Background colors
   background: {
     default: "#FFFFFF",
@@ -20,6 +27,9 @@ export const colors = {
     dark: "#E3F2FD",
     card: "#FAFBFC", // Subtle card background
     gradient: "#F8FCFF", // Light gradient background
+    surface: "#F8FAFC",
+    disabled: "#F3F4F6",
+    light: "#F8F9FA", // Light background for unselected chips/tags
   },
 
   // Text colors
@@ -29,6 +39,9 @@ export const colors = {
     disabled: "#90A4AE", // Light blue-gray
     hint: "#78909C", // Hint text
     accent: "#37474F", // Accent text
+    placeholder: "#9CA3AF",
+    hint2: "#6B7280",
+    disabled2: "#9CA3AF",
   },
 
   // Status colors
@@ -66,6 +79,7 @@ export const colors = {
       main: "#7EC8E3",
       disabled: "#cccccc",
     },
+    secondary: "#E5E7EB",
   },
 
   // Card colors
@@ -95,6 +109,26 @@ export const colors = {
     dislike: "#6B7280", // Gray for dislike
     comment: "#3B82F6", // Blue for comment
     view: "#9CA3AF", // Light gray for view count
+  },
+
+  input: {
+    background: "#F9FAFB",
+    border: "#E5E7EB",
+    disabled: "#F3F4F6",
+    disabledBorder: "#D1D5DB",
+  },
+
+  file: {
+    image: "#10B981", // Green for images
+    video: "#8B5CF6", // Purple for videos
+    document: "#3B82F6", // Blue for documents
+  },
+
+  error: {
+    main: "#EF4444",
+    background: "#FEF2F2",
+    border: "#FECACA",
+    dark: "#DC2626",
   },
 } as const;
 

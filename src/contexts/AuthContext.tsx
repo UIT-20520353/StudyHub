@@ -184,7 +184,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const signOut = async () => {
-    await authService.logout();
     setUser(null);
     setPendingAuthentication(false);
   };
