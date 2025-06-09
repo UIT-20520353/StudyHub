@@ -1,21 +1,46 @@
-import React from "react";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CommonHeader from "../../components/common/CommonHeader";
+import { TopicItem } from "../../components/community";
+import { ProductItem } from "../../components/marketplace";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
-import { RootStackNavigationProp } from "../../types/navigation";
+import { productService } from "../../services/productService";
+import { topicService } from "../../services/topicService";
 import { colors } from "../../theme/colors";
-import { DislikeIcon, LikeIcon } from "../../components/icons";
+import { MainTabNavigationProp } from "../../types/navigation";
+import { IProductSummary } from "../../types/product";
+import { ITopic } from "../../types/topic";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 interface HomeScreenProps {
-  navigation: RootStackNavigationProp;
+  navigation: MainTabNavigationProp;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { signOut, user } = useAuth();
   const { t } = useTranslation(NAMESPACES.HOME);
+
+  const [topics, setTopics] = useState<ITopic[]>([]);
+  const [products, setProducts] = useState<IProductSummary[]>([]);
+
+  const getTop10Topics = async () => {
+    const { ok, body } = await topicService.getTop10Topics();
+    if (ok) {
+      setTopics(body);
+    }
+  };
+
+  const getTopProducts = async () => {
+    const { ok, body } = await productService.getTopProducts();
+    if (ok) {
+      setProducts(body);
+    }
+  };
 
   const handleProfilePress = (): void => {
     signOut();
@@ -26,12 +51,28 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     console.log("Chat pressed");
   };
 
+  const handleNotificationPress = (): void => {
+    navigation.navigate("Notification");
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getTop10Topics();
+      getTopProducts();
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
         <CommonHeader
           onProfilePress={handleProfilePress}
           onChatPress={handleChatPress}
+          onNotificationPress={handleNotificationPress}
         />
 
         <View style={styles.content}>
@@ -46,54 +87,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Text style={styles.topTopicsTitle}>{t("top_topics")}</Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {[
-                {
-                  title: "Lập trình Frontend",
-                  description:
-                    "Khám phá thế giới phát triển giao diện web với HTML, CSS, JavaScript và các framework hiện đại. Từ cơ bản đến nâng cao, từ responsive design đến animation.",
-                },
-                {
-                  title: "Tiếng Anh Giao Tiếp",
-                  description:
-                    "Luyện tập kỹ năng giao tiếp tiếng Anh hàng ngày. Các tình huống thực tế, phát âm chuẩn và ngữ pháp cơ bản.",
-                },
-                {
-                  title: "Marketing Digital",
-                  description:
-                    "Chiến lược marketing online hiệu quả. SEO, Social Media Marketing, Content Marketing và Email Marketing. Học cách xây dựng thương hiệu và tăng doanh số bán hàng.",
-                },
-                {
-                  title: "Thiết Kế Đồ Họa",
-                  description:
-                    "Sáng tạo với Photoshop, Illustrator và các công cụ thiết kế chuyên nghiệp. Từ concept đến sản phẩm hoàn chỉnh.",
-                },
-                {
-                  title: "Kỹ Năng Mềm",
-                  description:
-                    "Phát triển kỹ năng giao tiếp, làm việc nhóm, quản lý thời gian và giải quyết vấn đề. Những kỹ năng cần thiết cho sự thành công trong công việc.",
-                },
-              ].map((item, index) => (
-                <View key={`topic-${index}`} style={styles.topicCard}>
-                  <View style={styles.topicContent}>
-                    <Text style={styles.topicTitle} numberOfLines={1}>
-                      {item.title}
-                    </Text>
-                    <Text numberOfLines={4} style={styles.topicDescription}>
-                      {item.description}
-                    </Text>
-                  </View>
-
-                  <View style={styles.topicFooter}>
-                    <View style={styles.topicFooterItem}>
-                      <LikeIcon color={colors.common.white} size={16} />
-                      <Text style={styles.topicFooterText}>100</Text>
-                    </View>
-                    <View style={styles.topicFooterItem}>
-                      <DislikeIcon color={colors.common.white} size={16} />
-                      <Text style={styles.topicFooterText}>18</Text>
-                    </View>
-                  </View>
-                </View>
+              {topics.map((topic) => (
+                <TopicItem
+                  navigation={navigation}
+                  key={topic.id}
+                  topic={topic}
+                  onTopicPress={() => {
+                    navigation.navigate("TopicDetail", {
+                      topicId: topic.id,
+                    });
+                  }}
+                  cardStyle={{
+                    width: screenWidth - 32,
+                    marginRight: 16,
+                  }}
+                  hideCategories
+                  hideAttachments
+                />
               ))}
             </ScrollView>
           </View>
@@ -101,27 +111,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <View style={styles.topProductsContainer}>
             <Text style={styles.topProductsTitle}>{t("top_products")}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {[1, 2, 3, 4, 5].map((item) => (
-                <View key={item} style={styles.productCard}>
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=2098&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    }}
-                    style={styles.productImage}
-                  />
-
-                  <View style={styles.productInfo}>
-                    <Text style={styles.productTitle} numberOfLines={2}>
-                      Giáo trình Lịch sử Đảng Cộng sản Việt Nam
-                    </Text>
-                    <Text style={styles.productPrice}>100.000 VNĐ</Text>
-                  </View>
-                </View>
+              {products.map((product) => (
+                <ProductItem
+                  key={product.id}
+                  product={product}
+                  onProductPress={() => {
+                    navigation.navigate("ProductDetail", {
+                      productId: product.id,
+                    });
+                  }}
+                  cardStyle={{
+                    width: screenWidth - 32,
+                    marginRight: 16,
+                  }}
+                />
               ))}
             </ScrollView>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

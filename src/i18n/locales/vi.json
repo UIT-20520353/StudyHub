@@ -11,13 +11,18 @@
     "search": "Tìm kiếm",
     "filter": "Lọc",
     "error_title": "Lỗi",
-    "success_title": "Thành công"
+    "success_title": "Thành công",
+    "reset": "Đặt lại",
+    "apply": "Áp dụng",
+    "category": "Danh mục"
   },
   "button": {
     "ok": "OK",
     "confirm": "Xác nhận",
     "cancel": "Hủy",
-    "verify": "Xác thực"
+    "verify": "Xác thực",
+    "cancel_order": "Không hủy",
+    "confirm_cancel_order": "Xác nhận hủy"
   },
   "auth": {
     "login": "Đăng nhập",
@@ -25,7 +30,7 @@
     "email": "Email",
     "password": "Mật khẩu",
     "confirm_password": "Xác nhận mật khẩu",
-    "forgot_password": "Quên mật khẩu?",
+    "forgot_password_link": "Quên mật khẩu?",
     "no_account": "Chưa có tài khoản?",
     "has_account": "Đã có tài khoản?",
     "signup_now": "Đăng ký ngay",
@@ -99,14 +104,34 @@
     "verifying": "Đang xác thực...",
     "verify_otp": "Xác thực OTP",
     "not_received_otp": "Không nhận được mã?",
-    "change_email": "Thay đổi email"
+    "change_email": "Thay đổi email",
+    "forgot_password": {
+      "title": "Đặt Lại Mật Khẩu",
+      "description": "Nhập địa chỉ email của bạn và chúng tôi sẽ gửi link đặt lại mật khẩu",
+      "info_text": "Chúng tôi sẽ gửi link bảo mật để đặt lại mật khẩu. Vui lòng kiểm tra email sau khi nhấn gửi.",
+      "send_button": "Gửi Link Đặt Lại",
+      "sending": "Đang gửi...",
+      "email_sent": "Đã gửi link đặt lại thành công!",
+      "email_sent_title": "Kiểm Tra Email",
+      "email_sent_description": "Chúng tôi đã gửi link đặt lại mật khẩu đến địa chỉ email của bạn",
+      "instruction_check": "Kiểm tra hộp thư email",
+      "instruction_click": "Nhấn vào link đặt lại trong email",
+      "instruction_reset": "Tạo mật khẩu mới",
+      "back_to_login": "Về Trang Đăng Nhập",
+      "remember_password": "Nhớ lại mật khẩu?",
+      "not_received": "Không nhận được email?",
+      "resend": "Gửi lại",
+      "email_resent": "Đã gửi lại email!",
+      "send_error": "Lỗi khi gửi email đặt lại"
+    }
   },
   "tabs": {
     "home": "Trang chủ",
     "marketplace": "Mua bán",
     "community": "Cộng đồng",
     "profile": "Hồ sơ",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "cart": "Giỏ hàng"
   },
   "home": {
     "welcome": "Chào mừng đến với StudyHub",
@@ -127,9 +152,58 @@
     "sell_book": "Bán sách",
     "book_details": "Thông tin sách",
     "seller_info": "Thông tin người bán",
-    "contact_seller": "Liên hệ người bán",
     "price": "Giá",
-    "original_price": "Giá gốc"
+    "original_price": "Giá gốc",
+    "search_placeholder": "Tìm kiếm sách, tài liệu...",
+    "condition": {
+      "new": "Mới",
+      "like_new": "Như mới",
+      "good": "Tốt",
+      "fair": "Khá tốt",
+      "poor": "Cũ",
+      "unknown": "Không xác định"
+    },
+    "currency": "đ",
+    "attachments": " tệp đính kèm",
+    "views": " lượt xem",
+    "image_error": "Không thể tải ảnh",
+    "description": "Mô tả",
+    "delivery_info": "Thông tin giao hàng",
+    "delivery_method": "Phương thức giao hàng",
+    "address": "Địa chỉ",
+    "contact_seller": "Liên hệ",
+    "buy_now": "Mua ngay",
+    "add_to_cart": "Thêm vào giỏ hàng",
+    "remove_from_cart": "Xóa khỏi giỏ hàng",
+    "no_image": "Chưa có hình ảnh",
+    "price_note": "*Chưa bao gồm phí vận chuyển",
+    "delivery": {
+      "shipper": "Giao hàng",
+      "hand_delivery": "Gặp trực tiếp",
+      "both": "Cả hai phương thức",
+      "shipper_note": "Phí vận chuyển sẽ được thảo luận với người bán",
+      "hand_delivery_note": "Địa điểm gặp mặt"
+    },
+    "cart": {
+      "added_success_title": "Thêm vào giỏ hàng thành công!",
+      "added_success_message": "{{productName}} đã được thêm vào giỏ hàng",
+      "removed_success_title": "Xóa khỏi giỏ hàng thành công!",
+      "removed_success_message": "{{productName}} đã được xóa khỏi giỏ hàng",
+      "cancel_reason": "Vui lòng nhập lý do hủy đơn"
+    },
+    "filter_title": "Bộ lọc sản phẩm",
+    "product": {
+      "delete_success": "Xóa sản phẩm thành công!",
+      "delete_error": "Lỗi khi xóa sản phẩm"
+    }
+  },
+  "time": {
+    "just_now": "Vừa xong",
+    "minutes": "p",
+    "hours": "h",
+    "days": "d",
+    "weeks": "w",
+    "months": "m"
   },
   "community": {
     "create_post": "Tạo bài viết",
@@ -151,7 +225,71 @@
     "about": "Giới thiệu",
     "help": "Trợ giúp",
     "privacy_policy": "Chính sách bảo mật",
-    "terms": "Điều khoản sử dụng"
+    "terms": "Điều khoản sử dụng",
+    "user_profile_title": "Thông tin người dùng",
+    "user_not_found": "Không tìm thấy thông tin người dùng",
+    "personal_info": "Thông tin cá nhân",
+    "academic_info": "Thông tin học tập",
+    "contact_actions": "Liên hệ",
+    "send_message": "Nhắn tin",
+    "call": "Gọi điện",
+    "full_name": "Họ tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "student_id": "Mã sinh viên",
+    "university": "Trường",
+    "major": "Ngành",
+    "year": "Năm",
+    "not_public": "Chưa công khai",
+    "not_updated": "Chưa cập nhật",
+    "year_format": "Năm {{year}}",
+    "edit_info": "Chỉnh sửa thông tin",
+    "change_password": "Đổi mật khẩu",
+    "change_avatar": "Đổi ảnh đại diện",
+    "avatar": {
+      "take_photo": "Chụp ảnh mới",
+      "choose_from_library": "Chọn từ thư viện",
+      "cancel": "Hủy",
+      "permission_camera": "Cần quyền truy cập camera",
+      "permission_camera_message": "Ứng dụng cần quyền truy cập camera để chụp ảnh.",
+      "permission_library": "Cần quyền truy cập",
+      "permission_library_message": "Ứng dụng cần quyền truy cập thư viện ảnh để đổi avatar.",
+      "uploading": "Đang tải lên...",
+      "upload_success": "Thành công!",
+      "upload_success_message": "Ảnh đại diện đã được cập nhật thành công",
+      "file_too_large": "Ảnh không được vượt quá 5MB",
+      "error_title": "Lỗi",
+      "error_change": "Không thể thay đổi ảnh đại diện",
+      "error_take_photo": "Không thể chụp ảnh",
+      "error_pick_library": "Không thể chọn ảnh từ thư viện",
+      "error_upload": "Không thể cập nhật ảnh đại diện"
+    },
+    "account_settings": "Cài đặt tài khoản",
+    "help_support": "Trợ giúp",
+    "actions": "Hành động",
+    "stats": {
+      "products": "Sản phẩm",
+      "sold": "Đã bán",
+      "reviews": "Đánh giá"
+    },
+    "password": {
+      "security_title": "Bảo mật mật khẩu",
+      "security_description": "Giữ tài khoản an toàn bằng cách thay đổi mật khẩu thường xuyên",
+      "requirements_title": "Yêu cầu mật khẩu",
+      "requirement_length": "Ít nhất 6 ký tự",
+      "requirement_different": "Phải khác với mật khẩu hiện tại",
+      "requirement_secure": "Sử dụng kết hợp chữ cái và số",
+      "current_password": "Mật khẩu hiện tại",
+      "current_password_placeholder": "Nhập mật khẩu hiện tại",
+      "new_password": "Mật khẩu mới",
+      "new_password_placeholder": "Nhập mật khẩu mới",
+      "confirm_password": "Xác nhận mật khẩu mới",
+      "confirm_password_placeholder": "Xác nhận mật khẩu mới",
+      "change_button": "Đổi mật khẩu",
+      "changing": "Đang thay đổi...",
+      "change_success": "Đổi mật khẩu thành công!",
+      "change_error": "Lỗi khi đổi mật khẩu"
+    }
   },
   "settings": {
     "language": "Ngôn ngữ",
@@ -165,12 +303,25 @@
     "security": "Bảo mật",
     "title": "Cài đặt",
     "profile": "Hồ sơ",
+    "history_buy": "Lịch sử mua hàng",
+    "history_sell": "Lịch sử bán hàng",
     "button": {
       "logout": "Đăng xuất"
+    },
+    "order": {
+      "confirmed_success_message": "Đơn hàng đã được xác nhận thành công!",
+      "shipped_success_message": "Đơn hàng đã được giao thành công!",
+      "delivered_success_message": "Đơn hàng đã được giao thành công!",
+      "completed_success_message": "Đơn hàng đã được hoàn thành thành công!"
     }
   },
   "api": {
     "error": {
+      "order": {
+        "product": {
+          "not-available": "Sản phẩm không khả dụng"
+        }
+      },
       "internal-server": "Lỗi máy chủ",
       "validate": {
         "login": {
@@ -178,6 +329,22 @@
         },
         "email": {
           "domain-mismatch": "Email không khớp với trường đại học"
+        },
+        "order": {
+          "buyer-seller": {
+            "same": "Người mua và người bán không thể là cùng một người"
+          }
+        },
+        "topic": {
+          "university-id": {
+            "required": "Mã sinh viên là bắt buộc"
+          }
+        },
+        "current-password": {
+          "incorrect": "Mật khẩu hiện tại không đúng"
+        },
+        "new-password": {
+          "must-differ": "Mật khẩu mới phải khác với mật khẩu hiện tại"
         }
       },
       "user": {

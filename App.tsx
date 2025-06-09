@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { ActivityIndicator, LogBox, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import AppNavigator from "./src/navigation/AppNavigator";
-import initI18n from "./src/i18n";
-import { ActivityIndicator, View, LogBox } from "react-native";
+import { Provider } from "react-redux";
+import { ToastContainer } from "./src/components/common/ToastContainer";
 import { AuthProvider } from "./src/contexts/AuthContext";
+import { ToastProvider } from "./src/contexts/ToastContext";
+import initI18n from "./src/i18n";
+import AppNavigator from "./src/navigation/AppNavigator";
+import { store } from "./src/store";
 
-// Disable Inspector warnings
 LogBox.ignoreLogs(["Inspector"]);
 
 export default function App() {
@@ -29,10 +32,16 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <SafeAreaProvider>
-        <AppNavigator />
-      </SafeAreaProvider>
-    </AuthProvider>
+    <Provider store={store}>
+      <ToastProvider maxToasts={3}>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <AppNavigator />
+
+            <ToastContainer />
+          </SafeAreaProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </Provider>
   );
 }

@@ -1,10 +1,12 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
+import { IUser } from "./user";
 
 // Auth Stack Types
 export type AuthStackParamList = {
   Login: undefined;
   Register: undefined;
+  ForgotPassword: undefined;
   OTPVerification: {
     email: string;
     userId: number;
@@ -22,6 +24,18 @@ export type MainTabParamList = {
   TopicDetail: {
     topicId: number;
   };
+  ProductDetail: {
+    productId: number;
+  };
+  ProductList: undefined;
+  Cart: undefined;
+  Checkout: {
+    productIds: number[];
+    seller: IUser;
+  };
+  CreateProduct: undefined;
+  Notification: undefined;
+  HomeMain: undefined;
 };
 
 // Settings Stack Types
@@ -29,12 +43,19 @@ export type SettingsStackParamList = {
   Settings: undefined;
   Profile: undefined;
   Language: undefined;
+  HistoryMenu: undefined;
+  History: undefined;
+  SellerOrders: undefined;
+  ChangePassword: undefined;
 };
 
 // Root Stack Types
 export type RootStackParamList = {
   Main: undefined;
   Auth: undefined;
+  UserProfile: {
+    userId: number;
+  };
 };
 
 // Navigation Props

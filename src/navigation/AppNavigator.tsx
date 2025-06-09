@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MainTabNavigator from "./MainTabNavigator";
 import AuthNavigator from "./AuthNavigator";
 import SplashScreen from "../screens/static/SplashScreen";
+import UserProfileScreen from "../screens/main/UserProfileScreen";
 import { useAuth } from "../contexts/AuthContext";
 import * as ExpoSplashScreen from "expo-splash-screen";
 import { RootStackParamList } from "../types/navigation";
@@ -60,7 +61,10 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
-          <Stack.Screen name="Main" component={MainTabNavigator} />
+          <>
+            <Stack.Screen name="Main" component={MainTabNavigator} />
+            <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          </>
         ) : (
           <Stack.Screen name="Auth" component={AuthNavigator} />
         )}

@@ -7,11 +7,13 @@ import { useAuth } from "../../contexts/AuthContext";
 interface CommonHeaderProps {
   onProfilePress?: () => void;
   onChatPress?: () => void;
+  onNotificationPress?: () => void;
 }
 
 const CommonHeader: React.FC<CommonHeaderProps> = ({
   onProfilePress,
   onChatPress,
+  onNotificationPress,
 }) => {
   const navigation = useNavigation();
   const { user } = useAuth();
@@ -49,13 +51,11 @@ const CommonHeader: React.FC<CommonHeaderProps> = ({
 
       <View style={styles.iconContainer}>
         <TouchableOpacity
-          onPress={handleChatPress}
+          onPress={onNotificationPress}
           style={styles.iconContainer}
         >
-          <Ionicons name="chatbubble-outline" size={24} color="#333" />
+          <Ionicons name="notifications-outline" size={26} color="#333" />
         </TouchableOpacity>
-
-        <Ionicons name="notifications-outline" size={26} color="#333" />
       </View>
 
       {/* <TouchableOpacity

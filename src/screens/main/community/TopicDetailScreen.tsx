@@ -3,25 +3,34 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import {
   Alert,
+  Dimensions,
   Image,
+  KeyboardAvoidingView,
+  Linking,
+  Modal,
+  Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Modal,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Loading } from "../../../components/common/Loading";
-import MessageModal from "../../../components/common/MessageModal";
+import { CommentInput } from "../../../components/community/CommentInput";
+import { CommentList } from "../../../components/community/CommentList";
+import DeleteTopicModal from "../../../components/community/DeleteTopicModal";
 import { DislikeIcon, LikeIcon } from "../../../components/icons";
 import { useAuth } from "../../../contexts/AuthContext";
 import { ETopicReaction } from "../../../enums/topic";
+import { useQuickToast } from "../../../hooks";
 import { topicService } from "../../../services/topicService";
 import { colors } from "../../../theme/colors";
 import { fonts } from "../../../theme/fonts";
+import { IComment, ICommentCreate } from "../../../types/comment";
 import { ITopic } from "../../../types/topic";
+import { useFormatters } from "../../../utils/formatters";
 
 interface TopicDetailScreenProps {
   route: {
@@ -78,21 +87,30 @@ export default function TopicDetailScreen({
   route,
   navigation,
 }: TopicDetailScreenProps) {
+  const { formatTimeAgo } = useFormatters();
   const { topicId } = route.params;
   const { user } = useAuth();
+  const toast = useQuickToast();
   const [topic, setTopic] = useState<ITopic | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isReacting, setIsReacting] = useState<boolean>(false);
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
   const [imageViewerModal, setImageViewerModal] = useState<boolean>(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
 
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [commentsLoading, setCommentsLoading] = useState<boolean>(false);
+  const [commentsRefreshing, setCommentsRefreshing] = useState<boolean>(false);
+  const [commentSubmitting, setCommentSubmitting] = useState<boolean>(false);
+  const [commentDeleting, setCommentDeleting] = useState<boolean>(false);
+
   const handleDeletePress = () => {
     setDeleteConfirmModal(true);
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async (topicId: number) => {
     setDeleteConfirmModal(false);
     const { ok, errors } = await topicService.deleteTopic(topicId);
     if (ok) {
@@ -116,6 +134,19 @@ export default function TopicDetailScreen({
     setSelectedImageUrl("");
   };
 
+  const handleFilePress = async (fileUrl: string) => {
+    try {
+      const supported = await Linking.canOpenURL(fileUrl);
+      if (supported) {
+        await Linking.openURL(fileUrl);
+      } else {
+        Alert.alert("Lỗi", "Không thể mở file này");
+      }
+    } catch (error) {
+      Alert.alert("Lỗi", "Có lỗi xảy ra khi mở file");
+    }
+  };
+
   const loadTopicDetail = async () => {
     setLoading(true);
 
@@ -123,10 +154,16 @@ export default function TopicDetailScreen({
 
     if (ok) {
       setTopic(body);
-      console.log(body);
     }
 
     setLoading(false);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadTopicDetail();
+    await loadComments();
+    setRefreshing(false);
   };
 
   const handleReaction = async (type: ETopicReaction) => {
@@ -143,35 +180,56 @@ export default function TopicDetailScreen({
     setIsFollowing(!isFollowing);
   };
 
+  const handleCommentSubmit = async (commentData: ICommentCreate) => {
+    setCommentSubmitting(true);
+    const { ok } = await topicService.createComment({
+      topicId,
+      content: commentData.content,
+    });
+    if (ok) {
+      await loadComments();
+      toast.success("Bình luận đã được gửi thành công");
+    } else {
+      toast.error("Không thể gửi bình luận");
+    }
+    setCommentSubmitting(false);
+  };
+
+  const handleCommentDelete = async (commentId: number) => {
+    setCommentDeleting(true);
+    const { ok } = await topicService.deleteComment(commentId);
+    if (ok) {
+      toast.success("Bình luận đã được xóa thành công");
+      await loadComments();
+    } else {
+      toast.error("Không thể xóa bình luận");
+    }
+    setCommentDeleting(false);
+  };
+
+  const loadComments = async () => {
+    setCommentsLoading(true);
+    const { ok, body } = await topicService.getComments(topicId);
+    if (ok) {
+      setComments(body);
+    } else {
+      setComments([]);
+    }
+    setCommentsLoading(false);
+  };
+
+  const onRefreshComments = async () => {
+    setCommentsRefreshing(true);
+    await loadComments();
+    setCommentsRefreshing(false);
+  };
+
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const formatTimeAgo = (dateString: string): string => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
-    );
-
-    if (diffInMinutes < 1) return "Vừa xong";
-    if (diffInMinutes < 60) return `${diffInMinutes}p`;
-
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h`;
-
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays}d`;
-
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks < 4) return `${diffInWeeks}w`;
-
-    const diffInMonths = Math.floor(diffInDays / 30);
-    return `${diffInMonths}m`;
   };
 
   const isImageFile = (fileType: string, fileName: string): boolean => {
@@ -211,43 +269,17 @@ export default function TopicDetailScreen({
   useFocusEffect(
     useCallback(() => {
       loadTopicDetail();
+      loadComments();
     }, [])
   );
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <Loading />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (!topic) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Không tìm thấy bài viết</Text>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <MessageModal
+      <DeleteTopicModal
         visible={deleteConfirmModal}
-        onClose={handleCancelDelete}
-        type="warning"
-        title="Xác nhận xóa"
-        message="Bạn có chắc chắn muốn xóa bài viết này?"
-        showOkButton={false}
-        showConfirmButton={true}
-        showCancelButton={true}
-        confirmText="Xóa"
-        cancelText="Hủy"
-        onConfirm={handleConfirmDelete}
+        topic={topic}
         onCancel={handleCancelDelete}
-        backdropDismissible={true}
+        onConfirm={handleConfirmDelete}
       />
 
       <ImageViewerModal
@@ -267,266 +299,293 @@ export default function TopicDetailScreen({
         <Text style={styles.headerTitle}>Chi tiết bài viết</Text>
 
         <View style={styles.headerActions}>
-          {user?.id !== topic.author.id && (
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={handleFollow}
-            >
-              <Ionicons
-                name={isFollowing ? "notifications" : "notifications-outline"}
-                size={22}
-                color={
-                  isFollowing ? colors.primary.main : colors.text.secondary
-                }
-              />
-            </TouchableOpacity>
-          )}
-
-          {user && user.id === topic.author.id && (
+          {topic ? (
             <>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={handleFollow}
-              >
-                <Ionicons name="pencil" size={22} color={colors.text.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={handleDeletePress}
-              >
-                <Ionicons
-                  name="trash-outline"
-                  size={22}
-                  color={colors.error.main}
-                />
-              </TouchableOpacity>
+              {user?.id !== topic.author.id && (
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={handleFollow}
+                >
+                  <Ionicons
+                    name={
+                      isFollowing ? "notifications" : "notifications-outline"
+                    }
+                    size={22}
+                    color={
+                      isFollowing ? colors.primary.main : colors.text.secondary
+                    }
+                  />
+                </TouchableOpacity>
+              )}
+
+              {user && user.id === topic.author.id && (
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={handleDeletePress}
+                >
+                  <Ionicons
+                    name="trash-outline"
+                    size={22}
+                    color={colors.error.main}
+                  />
+                </TouchableOpacity>
+              )}
             </>
-          )}
+          ) : null}
         </View>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Topic Title */}
-        <View style={styles.titleSection}>
-          <Text style={styles.topicTitle}>{topic.title}</Text>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <Loading />
+        </View>
+      ) : topic ? (
+        <KeyboardAvoidingView
+          style={styles.contentContainer}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        >
+          <ScrollView
+            style={styles.content}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[colors.primary.main]}
+                tintColor={colors.primary.main}
+              />
+            }
+          >
+            <View style={styles.titleSection}>
+              <Text style={styles.topicTitle}>{topic.title}</Text>
 
-          {/* Categories */}
-          <View style={styles.categoriesContainer}>
-            {topic.categories.map((category) => (
-              <View key={category.id} style={styles.categoryTag}>
-                <Text style={styles.categoryText}>{category.name}</Text>
+              <View style={styles.categoriesContainer}>
+                {topic.categories.map((category) => (
+                  <View key={category.id} style={styles.categoryTag}>
+                    <Text style={styles.categoryText}>{category.name}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-        </View>
+            </View>
 
-        <View style={styles.authorSection}>
-          <Image
-            source={{ uri: topic.author.avatarUrl }}
-            style={styles.authorAvatar}
+            <View style={styles.authorSection}>
+              <Image
+                source={{ uri: topic.author.avatarUrl }}
+                style={styles.authorAvatar}
+              />
+              <View style={styles.authorInfo}>
+                <Text style={styles.authorName}>{topic.author.fullName}</Text>
+                <Text style={styles.authorDetails}>
+                  {topic.author.major && `${topic.author.major} • `}
+                  {topic.author.year && `Năm ${topic.author.year} • `}
+                  {topic.author.university.shortName}
+                </Text>
+                <Text style={styles.postTime}>
+                  {formatTimeAgo(topic.createdAt)}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.contentSection}>
+              <Text style={styles.topicContent}>{topic.content}</Text>
+            </View>
+
+            {topic.attachments.length > 0 && (
+              <View style={styles.attachmentsSection}>
+                <Text style={styles.sectionTitle}>File đính kèm</Text>
+
+                {topic.attachments.map((attachment) => {
+                  const isImage = isImageFile(
+                    attachment.fileType,
+                    attachment.fileName
+                  );
+
+                  if (isImage) {
+                    return (
+                      <TouchableOpacity
+                        key={attachment.id}
+                        style={styles.imageAttachmentContainer}
+                        onPress={() => handleImagePress(attachment.fileUrl)}
+                        activeOpacity={0.8}
+                      >
+                        <Image
+                          source={{ uri: attachment.fileUrl }}
+                          style={styles.attachmentImage}
+                          resizeMode="cover"
+                        />
+                        <View style={styles.imageOverlay}>
+                          <View style={styles.imageInfo}>
+                            <Text
+                              style={styles.imageFileName}
+                              numberOfLines={1}
+                            >
+                              {attachment.fileName}
+                            </Text>
+                            <Text style={styles.imageFileSize}>
+                              {formatFileSize(attachment.fileSize)}
+                            </Text>
+                          </View>
+                          <Ionicons
+                            name="expand-outline"
+                            size={20}
+                            color={colors.common.white}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  } else {
+                    return (
+                      <TouchableOpacity
+                        key={attachment.id}
+                        style={styles.attachmentItem}
+                        onPress={() => handleFilePress(attachment.fileUrl)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={styles.attachmentIcon}>
+                          <Ionicons
+                            name={getFileIcon(attachment.fileType)}
+                            size={20}
+                            color={colors.file.document}
+                          />
+                        </View>
+                        <View style={styles.attachmentInfo}>
+                          <Text style={styles.attachmentName}>
+                            {attachment.fileName}
+                          </Text>
+                          <Text style={styles.attachmentSize}>
+                            {formatFileSize(attachment.fileSize)}
+                          </Text>
+                        </View>
+                        <Ionicons
+                          name="open-outline"
+                          size={20}
+                          color={colors.text.secondary}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }
+                })}
+              </View>
+            )}
+
+            <View style={styles.statsSection}>
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  style={[
+                    styles.actionItem,
+                    topic.userInteraction &&
+                      topic.userInteraction.userReaction ===
+                        ETopicReaction.LIKE &&
+                      styles.actionActive,
+                  ]}
+                  onPress={() => handleReaction(ETopicReaction.LIKE)}
+                >
+                  <LikeIcon
+                    color={
+                      topic.userInteraction &&
+                      topic.userInteraction.userReaction === ETopicReaction.LIKE
+                        ? colors.interaction.like
+                        : colors.text.secondary
+                    }
+                    size={16}
+                  />
+
+                  <Text
+                    style={[
+                      styles.actionText,
+                      topic.userInteraction &&
+                        topic.userInteraction.userReaction ===
+                          ETopicReaction.LIKE && {
+                          color: colors.interaction.like,
+                        },
+                    ]}
+                  >
+                    {topic.likeCount}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.actionItem,
+                    topic.userInteraction &&
+                      topic.userInteraction.userReaction ===
+                        ETopicReaction.DISLIKE &&
+                      styles.actionActive,
+                  ]}
+                  onPress={() => handleReaction(ETopicReaction.DISLIKE)}
+                >
+                  <DislikeIcon
+                    color={
+                      topic.userInteraction &&
+                      topic.userInteraction.userReaction ===
+                        ETopicReaction.DISLIKE
+                        ? colors.interaction.like
+                        : colors.text.secondary
+                    }
+                    size={16}
+                  />
+                  <Text
+                    style={[
+                      styles.actionText,
+                      topic.userInteraction &&
+                        topic.userInteraction.userReaction ===
+                          ETopicReaction.DISLIKE && {
+                          color: colors.interaction.like,
+                        },
+                    ]}
+                  >
+                    {topic.dislikeCount}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.stats}>
+                <View style={styles.statItem}>
+                  <Ionicons
+                    name="eye-outline"
+                    size={16}
+                    color={colors.interaction.view}
+                  />
+                  <Text style={styles.statText}>{topic.viewCount}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Ionicons
+                    name="chatbubble-outline"
+                    size={16}
+                    color={colors.interaction.comment}
+                  />
+                  <Text style={styles.statText}>{comments.length}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.commentsSection}>
+              <Text style={styles.sectionTitle}>
+                Bình luận ({comments.length})
+              </Text>
+
+              <CommentList
+                comments={comments}
+                onDelete={handleCommentDelete}
+                currentUserId={user?.id}
+                loading={commentsLoading}
+                refreshing={commentsRefreshing}
+                onRefresh={onRefreshComments}
+                deleting={commentDeleting}
+              />
+            </View>
+          </ScrollView>
+
+          {/* Comment Input - Always at bottom */}
+          <CommentInput
+            onSubmit={handleCommentSubmit}
+            loading={commentSubmitting}
           />
-          <View style={styles.authorInfo}>
-            <Text style={styles.authorName}>{topic.author.fullName}</Text>
-            <Text style={styles.authorDetails}>
-              {topic.author.major && `${topic.author.major} • `}
-              {topic.author.year && `Năm ${topic.author.year} • `}
-              {topic.author.university.shortName}
-            </Text>
-            <Text style={styles.postTime}>
-              {formatTimeAgo(topic.createdAt)}
-            </Text>
-          </View>
-        </View>
-
-        {/* Topic Content */}
-        <View style={styles.contentSection}>
-          <Text style={styles.topicContent}>{topic.content}</Text>
-        </View>
-
-        {/* Attachments */}
-        {topic.attachments.length > 0 && (
-          <View style={styles.attachmentsSection}>
-            <Text style={styles.sectionTitle}>File đính kèm</Text>
-
-            {/* Separate images and other files */}
-            {topic.attachments.map((attachment) => {
-              const isImage = isImageFile(
-                attachment.fileType,
-                attachment.fileName
-              );
-
-              if (isImage) {
-                return (
-                  <TouchableOpacity
-                    key={attachment.id}
-                    style={styles.imageAttachmentContainer}
-                    onPress={() => handleImagePress(attachment.fileUrl)}
-                    activeOpacity={0.8}
-                  >
-                    <Image
-                      source={{ uri: attachment.fileUrl }}
-                      style={styles.attachmentImage}
-                      resizeMode="cover"
-                    />
-                    <View style={styles.imageOverlay}>
-                      <View style={styles.imageInfo}>
-                        <Text style={styles.imageFileName} numberOfLines={1}>
-                          {attachment.fileName}
-                        </Text>
-                        <Text style={styles.imageFileSize}>
-                          {formatFileSize(attachment.fileSize)}
-                        </Text>
-                      </View>
-                      <Ionicons
-                        name="expand-outline"
-                        size={20}
-                        color={colors.common.white}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                );
-              } else {
-                return (
-                  <TouchableOpacity
-                    key={attachment.id}
-                    style={styles.attachmentItem}
-                  >
-                    <View style={styles.attachmentIcon}>
-                      <Ionicons
-                        name={getFileIcon(attachment.fileType)}
-                        size={20}
-                        color={colors.file.document}
-                      />
-                    </View>
-                    <View style={styles.attachmentInfo}>
-                      <Text style={styles.attachmentName}>
-                        {attachment.fileName}
-                      </Text>
-                      <Text style={styles.attachmentSize}>
-                        {formatFileSize(attachment.fileSize)}
-                      </Text>
-                    </View>
-                    <Ionicons
-                      name="download-outline"
-                      size={20}
-                      color={colors.text.secondary}
-                    />
-                  </TouchableOpacity>
-                );
-              }
-            })}
-          </View>
-        )}
-
-        {/* Stats and Actions */}
-        <View style={styles.statsSection}>
-          <View style={styles.stats}>
-            <View style={styles.statItem}>
-              <Ionicons
-                name="eye-outline"
-                size={16}
-                color={colors.interaction.view}
-              />
-              <Text style={styles.statText}>{topic.viewCount}</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Ionicons
-                name="chatbubble-outline"
-                size={16}
-                color={colors.interaction.comment}
-              />
-              <Text style={styles.statText}>{topic.commentCount}</Text>
-            </View>
-          </View>
-
-          <View style={styles.actions}>
-            <TouchableOpacity
-              style={[
-                styles.actionItem,
-                topic.userInteraction &&
-                  topic.userInteraction.userReaction === ETopicReaction.LIKE &&
-                  styles.actionActive,
-              ]}
-              onPress={() => handleReaction(ETopicReaction.LIKE)}
-            >
-              <LikeIcon
-                color={
-                  topic.userInteraction &&
-                  topic.userInteraction.userReaction === ETopicReaction.LIKE
-                    ? colors.interaction.like
-                    : colors.text.secondary
-                }
-                size={16}
-              />
-
-              <Text
-                style={[
-                  styles.actionText,
-                  topic.userInteraction &&
-                    topic.userInteraction.userReaction ===
-                      ETopicReaction.LIKE && {
-                      color: colors.interaction.like,
-                    },
-                ]}
-              >
-                {topic.likeCount}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.actionItem,
-                topic.userInteraction &&
-                  topic.userInteraction.userReaction ===
-                    ETopicReaction.DISLIKE &&
-                  styles.actionActive,
-              ]}
-              onPress={() => handleReaction(ETopicReaction.DISLIKE)}
-            >
-              <DislikeIcon
-                color={
-                  topic.userInteraction &&
-                  topic.userInteraction.userReaction === ETopicReaction.DISLIKE
-                    ? colors.interaction.like
-                    : colors.text.secondary
-                }
-                size={16}
-              />
-              <Text
-                style={[
-                  styles.actionText,
-                  topic.userInteraction &&
-                    topic.userInteraction.userReaction ===
-                      ETopicReaction.DISLIKE && {
-                      color: colors.interaction.like,
-                    },
-                ]}
-              >
-                {topic.dislikeCount}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.actionItem}>
-              <Ionicons
-                name="chatbubble-outline"
-                size={18}
-                color={colors.interaction.comment}
-              />
-              <Text style={styles.actionText}>Bình luận</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Comments Section Placeholder */}
-        <View style={styles.commentsSection}>
-          <Text style={styles.sectionTitle}>
-            Bình luận ({topic.commentCount})
-          </Text>
-          <TouchableOpacity style={styles.writeCommentButton}>
-            <Text style={styles.writeCommentText}>Viết bình luận...</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+        </KeyboardAvoidingView>
+      ) : (
+        <Text style={styles.errorText}>Không tìm thấy bài viết</Text>
+      )}
     </SafeAreaView>
   );
 }
@@ -569,6 +628,9 @@ const styles = StyleSheet.create({
   actionButton: {
     padding: 8,
     marginLeft: 4,
+  },
+  contentContainer: {
+    flex: 1,
   },
   content: {
     flex: 1,
@@ -816,20 +878,9 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   commentsSection: {
-    padding: 16,
+    flex: 1,
     backgroundColor: colors.background.default,
-  },
-  writeCommentButton: {
-    padding: 16,
-    backgroundColor: colors.background.paper,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.border.light,
-  },
-  writeCommentText: {
-    fontSize: 14,
-    fontFamily: fonts.openSans.regular,
-    color: colors.text.placeholder,
+    paddingTop: 16,
   },
   errorText: {
     fontSize: 16,

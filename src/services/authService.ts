@@ -68,4 +68,6 @@ export const authService = {
     ),
   verifyEmail: async (body: IVerifyEmailData): Promise<ApiResponse<IUser>> =>
     apiCall(axiosInstance.post("/auth/verify-email", body)),
+  forgotPassword: async (email: string): Promise<ApiResponse<undefined>> =>
+    apiCall(axiosInstance.post("/auth/forgot-password", { email })),
 };

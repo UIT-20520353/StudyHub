@@ -8,6 +8,8 @@ import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
 import { RegisterFormValues } from "../screens/auth/RegisterScreen";
 import { authService, ILoginData } from "../services/authService";
+import { useAppDispatch } from "../store/hooks";
+import { clearCart } from "../store/slices/cartSlice";
 import { IUser } from "../types/user";
 
 interface AuthContextData {
@@ -34,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { t } = useTranslation(NAMESPACES.API);
+  const dispatch = useAppDispatch();
   const { t: commonT } = useTranslation(NAMESPACES.COMMON);
   const { t: buttonT } = useTranslation(NAMESPACES.BUTTON);
 
@@ -184,8 +187,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const signOut = async () => {
+    await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
     setUser(null);
     setPendingAuthentication(false);
+    dispatch(clearCart());
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface DotLoadingProps {
   color?: string;
@@ -56,7 +57,7 @@ export const Loading: React.FC<DotLoadingProps> = ({
   }, []);
 
   return (
-    <View style={styles.dotContainer}>
+    <SafeAreaView style={styles.dotContainer}>
       <Text style={[styles.dotText, { color }]}>{text || t("loading")}</Text>
       <View style={styles.dotsWrapper}>
         <Animated.View
@@ -87,7 +88,7 @@ export const Loading: React.FC<DotLoadingProps> = ({
           ]}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

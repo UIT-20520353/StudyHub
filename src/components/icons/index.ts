@@ -6,3 +6,6 @@ export * from "./LikeIcon";
 export * from "./DislikeIcon";
 export * from "./CommentIcon";
 export * from "./Icon";
+export * from "./HistoryIcon";
+export * from "./SellIcon";
+export * from "./BuyIcon";

@@ -1,5 +1,4 @@
-import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect } from "react";
+import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "../../../components/common/Button";
@@ -7,15 +6,10 @@ import { StackNavigationHeader } from "../../../components/common/StackNavigatio
 import { useTranslation } from "../../../hooks";
 import { LANGUAGES, NAMESPACES } from "../../../i18n";
 import { colors } from "../../../theme/colors";
-import { RootStackParamList } from "../../../types/navigation";
-
-type LanguageScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "Language"
->;
+import { SettingsStackNavigationProp } from "../../../types/navigation";
 
 interface LanguageScreenProps {
-  navigation: LanguageScreenNavigationProp;
+  navigation: SettingsStackNavigationProp;
 }
 
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {

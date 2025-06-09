@@ -6,21 +6,32 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 import { CommentIcon, DislikeIcon, LikeIcon } from "../../components/icons";
 import { colors } from "../../theme/colors";
 import { fonts } from "../../theme/fonts";
 import { ITopic } from "../../types/topic";
 import { ETopicReaction } from "../../enums/topic";
+import { navigateToUserProfileFromTab } from "../../utils/navigation";
 
 interface TopicItemProps {
   topic: ITopic;
   onTopicPress: (topic: ITopic) => void;
+  cardStyle?: StyleProp<ViewStyle>;
+  hideCategories?: boolean;
+  hideAttachments?: boolean;
+  navigation?: any;
 }
 
 export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
   topic,
   onTopicPress,
+  cardStyle,
+  hideCategories = false,
+  hideAttachments = false,
+  navigation,
 }) => {
   const formatTimeAgo = (dateString: string): string => {
     const now = new Date();
@@ -75,8 +86,7 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
   };
 
   return (
-    <View key={topic.id} style={styles.topicCard}>
-      {/* Header */}
+    <View key={topic.id} style={[styles.topicCard, cardStyle]}>
       <View style={styles.topicHeader}>
         <View style={styles.authorInfo}>
           <View style={styles.avatarContainer}>
@@ -88,9 +98,15 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
             />
           </View>
           <View style={styles.authorDetails}>
-            <Text style={styles.authorName} numberOfLines={1}>
-              {topic.author.fullName}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigateToUserProfileFromTab(navigation, topic.author.id);
+              }}
+            >
+              <Text style={styles.authorName} numberOfLines={1}>
+                {topic.author.fullName}
+              </Text>
+            </TouchableOpacity>
             <View style={styles.authorMetaRow}>
               <Text style={styles.authorMeta} numberOfLines={1}>
                 {topic.author.major && `${topic.author.major} • `}
@@ -119,20 +135,19 @@ export const TopicItem: React.FunctionComponent<TopicItemProps> = ({
           </Text>
         </View>
       </TouchableOpacity>
-      {/* Categories */}
-      {renderCategories()}
-      {/* Attachments indicator */}
-      {topic.attachments && topic.attachments.length > 0 && (
-        <View style={styles.attachmentContainer}>
-          <View style={styles.attachmentIndicator}>
-            <Text style={styles.attachmentIcon}>📎</Text>
-            <Text style={styles.attachmentText}>
-              {topic.attachments.length} tệp đính kèm
-            </Text>
+      {!hideCategories && renderCategories()}
+      {!hideAttachments &&
+        topic.attachments &&
+        topic.attachments.length > 0 && (
+          <View style={styles.attachmentContainer}>
+            <View style={styles.attachmentIndicator}>
+              <Text style={styles.attachmentIcon}>📎</Text>
+              <Text style={styles.attachmentText}>
+                {topic.attachments.length} tệp đính kèm
+              </Text>
+            </View>
           </View>
-        </View>
-      )}
-      {/* Footer Stats */}
+        )}
       <View style={styles.topicFooter}>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>

@@ -30,6 +30,8 @@ import { fonts } from "../../../theme/fonts";
 import { ICategory } from "../../../types/category";
 import { MainTabNavigationProp } from "../../../types/navigation";
 import { CreateTopicFormValues, CreateTopicSchema } from "./utils";
+import { useQuickToast } from "../../../hooks";
+import { useAuth } from "../../../contexts/AuthContext";
 
 type CreateTopicScreenProps = {
   navigation: MainTabNavigationProp;
@@ -104,6 +106,9 @@ export default function CreateTopicScreen({
   navigation,
 }: CreateTopicScreenProps) {
   const { t: commonT } = useTranslation(NAMESPACES.COMMON);
+  const { t: apiT } = useTranslation(NAMESPACES.API);
+  const { user } = useAuth();
+  const toast = useQuickToast();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -127,6 +132,13 @@ export default function CreateTopicScreen({
     formData.append("content", values.content.trim());
     formData.append("visibility", values.visibility);
 
+    if (values.visibility === ETopicVisibility.UNIVERSITY_ONLY) {
+      formData.append(
+        "universityId",
+        user ? user.university.id.toString() : ""
+      );
+    }
+
     values.categoryIds.forEach((id) => {
       formData.append("categoryIds", id.toString());
     });
@@ -146,9 +158,9 @@ export default function CreateTopicScreen({
     if (ok) {
       setSuccessModal(true);
       helpers.resetForm();
+      toast.success(commonT("success"));
     } else {
-      const errorMessage = errors?.message || "Có lỗi xảy ra khi tạo bài viết";
-      Alert.alert("Lỗi", errorMessage);
+      toast.error(apiT(errors.message));
     }
 
     setIsLoading(false);
@@ -276,7 +288,7 @@ export default function CreateTopicScreen({
                     label="Nội dung"
                     required
                     minHeight={120}
-                    maxHeight={200}
+                    maxHeight={400}
                     showCharacterCount={true}
                     maxLength={5000}
                   />

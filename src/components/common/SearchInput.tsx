@@ -27,6 +27,7 @@ interface SearchInputProps extends Omit<TextInputProps, "onChangeText"> {
   suggestions?: string[];
   onSuggestionPress?: (suggestion: string) => void;
   showSuggestions?: boolean;
+  placeholder?: string;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
@@ -43,6 +44,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onSuggestionPress,
   showSuggestions = true,
   value,
+  placeholder = "Tìm kiếm sách, tài liệu, bài viết...",
   ...props
 }) => {
   const [searchText, setSearchText] = useState(value || "");
@@ -135,7 +137,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
         <TextInput
           style={styles.input}
-          placeholder="Tìm kiếm sách, tài liệu, bài viết..."
+          placeholder={placeholder}
           placeholderTextColor="#94A3B8"
           value={searchText}
           onChangeText={handleChangeText}

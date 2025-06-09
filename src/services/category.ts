@@ -5,4 +5,6 @@ import axiosInstance, { apiCall } from "./axios";
 export const categoryService = {
   getTopicCategories: async (): Promise<ApiResponse<ICategory[]>> =>
     apiCall(axiosInstance.get("/common/categories/topic")),
+  getProductCategories: async (): Promise<ApiResponse<ICategory[]>> =>
+    apiCall(axiosInstance.get("/common/categories/product")),
 };

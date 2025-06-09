@@ -19,7 +19,7 @@ export interface MessageModalProps {
   onClose?: () => void;
   type?: "error" | "success" | "warning" | "info";
   title?: string;
-  message: string;
+  message: string | ReactNode;
   children?: ReactNode;
 
   // Button configurations

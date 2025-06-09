@@ -2,13 +2,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import React from "react";
+import { View } from "react-native";
+import { Badge } from "../components/common/Badge";
 import { useTranslation } from "../hooks";
 import { NAMESPACES } from "../i18n";
-import CommunityStackNavigator from "./CommunityStackNavigator";
-import HomeScreen from "../screens/main/HomeScreen";
-import MarketplaceScreen from "../screens/main/MarketplaceScreen";
+import { useAppSelector } from "../store/hooks";
 import { colors } from "../theme/colors";
 import { MainTabParamList } from "../types/navigation";
+import CartStackNavigator from "./CartStackNavigator";
+import CommunityStackNavigator from "./CommunityStackNavigator";
+import HomeStackNavigator from "./HomeStackNavigator";
+import MarketNavigator from "./MarketNavigator";
 import SettingsStackNavigator from "./SettingsStackNavigator";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -18,10 +22,19 @@ const SCREENS_WITHOUT_TAB_BAR = [
   "Profile",
   "TopicDetail",
   "CreateTopic",
+  "ProductDetail",
+  "Checkout",
+  "CreateProduct",
+  "History",
+  "SellerOrders",
+  "HistoryMenu",
+  "Notification",
+  "ChangePassword",
 ];
 
 export default function MainTabNavigator() {
   const { t } = useTranslation(NAMESPACES.TABS);
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   return (
     <Tab.Navigator
@@ -42,11 +55,19 @@ export default function MainTabNavigator() {
             case "Settings":
               iconName = "settings";
               break;
+            case "Cart":
+              iconName = "shopping-bag";
+              break;
             default:
               iconName = "home";
           }
 
-          return <MaterialIcons name={iconName} size={size} color={color} />;
+          return (
+            <View>
+              <MaterialIcons name={iconName} size={size} color={color} />
+              {route.name === "Cart" && <Badge count={cartItems.length} />}
+            </View>
+          );
         },
         tabBarActiveTintColor: colors.primary.main,
         tabBarInactiveTintColor: colors.common.gray,
@@ -70,13 +91,18 @@ export default function MainTabNavigator() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackNavigator}
         options={{ title: t("home") }}
       />
       <Tab.Screen
         name="Marketplace"
-        component={MarketplaceScreen}
+        component={MarketNavigator}
         options={{ title: t("marketplace") }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartStackNavigator}
+        options={{ title: t("cart") }}
       />
       <Tab.Screen
         name="Community"

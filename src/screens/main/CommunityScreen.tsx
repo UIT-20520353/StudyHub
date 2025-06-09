@@ -1,50 +1,83 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Loading } from "../../components/common/Loading";
 import SearchInput from "../../components/common/SearchInput";
-import { TopicList } from "../../components/community";
+import { CommunityTab, TopicList } from "../../components/community";
+import {
+  FilterModal,
+  FilterOptions,
+} from "../../components/community/FilterModal";
 import { topicService } from "../../services/topicService";
 import { colors } from "../../theme/colors";
 import { MainTabNavigationProp } from "../../types/navigation";
 import { ITopic } from "../../types/topic";
+import { useAuth } from "../../contexts/AuthContext";
+import { ICategory } from "../../types/category";
+import { categoryService } from "../../services/category";
+import { ETopicVisibility } from "../../enums/topic";
 
 interface CommunityScreenProps {
   navigation: MainTabNavigationProp;
 }
 
 export default function CommunityScreen({ navigation }: CommunityScreenProps) {
-  const [searchText, setSearchText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState([
-    "Giải tích 1",
-    "Giáo trình Vật lý đại cương",
-    "Sách IELTS",
-    "Kinh tế vĩ mô",
-  ]);
+  const { user } = useAuth();
 
+  const [searchText, setSearchText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<"ALL" | "MY">("ALL");
   const [topics, setTopics] = useState<ITopic[]>([]);
+  const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
+
+  const [currentFilters, setCurrentFilters] = useState<FilterOptions>({
+    categoryIds: [],
+  });
+
+  const getCategories = useCallback(async () => {
+    const { ok, body } = await categoryService.getTopicCategories();
+    if (ok) {
+      setCategories(body);
+    }
+  }, []);
 
   const getTopics = async () => {
     setLoading(true);
-    const { ok, body } = await topicService.getTopics();
+    const { ok, body } = await topicService.getTopics({
+      title: debouncedSearchText || undefined,
+      categoryIds:
+        currentFilters.categoryIds.length > 0
+          ? currentFilters.categoryIds
+          : undefined,
+    });
     if (ok && body) {
       setTopics(body.items);
     }
     setLoading(false);
   };
 
-  const handleSearch = async (text: string) => {
-    // setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // setLoading(false);
-    // Update search results
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getTopics();
+    setRefreshing(false);
   };
 
   const handleFilterPress = () => {
-    // Open filter modal
+    setShowFilterModal(true);
+  };
+
+  const handleFilterApply = (filters: FilterOptions) => {
+    setCurrentFilters(filters);
+    // Trong thực tế sẽ call API với filters
+    console.log("Applied filters:", filters);
+  };
+
+  const handleFilterClose = () => {
+    setShowFilterModal(false);
   };
 
   const handleTopicPress = (topic: ITopic) => {
@@ -55,9 +88,35 @@ export default function CommunityScreen({ navigation }: CommunityScreenProps) {
     navigation.navigate("CreateTopic");
   };
 
+  const filteredTopics = useMemo(
+    () =>
+      topics.filter((topic) => {
+        if (activeTab === "ALL")
+          return (
+            topic.visibility === ETopicVisibility.PUBLIC ||
+            (topic.visibility === ETopicVisibility.UNIVERSITY_ONLY &&
+              topic.university?.id === user?.university?.id)
+          );
+        return topic.author.id === user?.id;
+      }),
+    [topics, activeTab]
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchText(searchText);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
+
   useFocusEffect(
     useCallback(() => {
       getTopics();
+    }, [debouncedSearchText, currentFilters])
+  );
+  useFocusEffect(
+    useCallback(() => {
+      getCategories();
     }, [])
   );
 
@@ -66,19 +125,26 @@ export default function CommunityScreen({ navigation }: CommunityScreenProps) {
       <SearchInput
         value={searchText}
         onChangeText={setSearchText}
-        onSearch={handleSearch}
         loading={loading}
-        suggestions={suggestions}
+        suggestions={[]}
         onFilterPress={handleFilterPress}
+        placeholder="Tìm kiếm bài viết..."
       />
+
+      <CommunityTab activeTab={activeTab} onTabChange={setActiveTab} />
 
       {loading ? (
         <Loading />
       ) : (
-        <TopicList topics={topics} onTopicPress={handleTopicPress} />
+        <TopicList
+          topics={filteredTopics}
+          onTopicPress={handleTopicPress}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          navigation={navigation}
+        />
       )}
 
-      {/* Floating Action Button for Create Topic */}
       <TouchableOpacity
         style={styles.fab}
         onPress={handleCreateTopic}
@@ -86,6 +152,14 @@ export default function CommunityScreen({ navigation }: CommunityScreenProps) {
       >
         <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
+
+      <FilterModal
+        visible={showFilterModal}
+        onClose={handleFilterClose}
+        onApply={handleFilterApply}
+        categories={categories}
+        initialFilters={currentFilters}
+      />
     </SafeAreaView>
   );
 }

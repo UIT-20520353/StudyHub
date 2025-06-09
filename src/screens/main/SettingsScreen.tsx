@@ -5,15 +5,20 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "../../hooks";
 import { NAMESPACES } from "../../i18n";
 import { colors } from "../../theme/colors";
-import { RootStackNavigationProp } from "../../types/navigation";
-import { ArrowRightIcon, LanguageIcon, UserIcon } from "../../components/icons";
+import { SettingsStackNavigationProp } from "../../types/navigation";
+import {
+  ArrowRightIcon,
+  HistoryIcon,
+  LanguageIcon,
+  UserIcon,
+} from "../../components/icons";
 import { Button } from "../../components/common/Button";
 
-interface HomeScreenProps {
-  navigation: RootStackNavigationProp;
+interface SettingsScreenProps {
+  navigation: SettingsStackNavigationProp;
 }
 
-const SettingsScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { signOut } = useAuth();
   const { t } = useTranslation(NAMESPACES.SETTINGS);
 
@@ -23,6 +28,10 @@ const SettingsScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const handleProfilePress = (): void => {
     navigation.navigate("Profile");
+  };
+
+  const handleHistoryPress = (): void => {
+    navigation.navigate("HistoryMenu");
   };
 
   return (
@@ -45,6 +54,14 @@ const SettingsScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <View style={styles.buttonLeftContent}>
                 <UserIcon size={28} />
                 <Text style={styles.buttonText}>{t("profile")}</Text>
+              </View>
+              <ArrowRightIcon size={28} />
+            </Button>
+
+            <Button onPress={handleHistoryPress} style={styles.button}>
+              <View style={styles.buttonLeftContent}>
+                <HistoryIcon size={28} />
+                <Text style={styles.buttonText}>Lịch sử</Text>
               </View>
               <ArrowRightIcon size={28} />
             </Button>

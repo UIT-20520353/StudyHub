@@ -35,7 +35,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
   value,
   placeholder,
   minHeight = 120,
-  maxHeight = 200,
+  maxHeight = 500,
   showCharacterCount = false,
   maxLength,
   style,
@@ -82,13 +82,13 @@ export const TextArea: React.FC<TextAreaProps> = ({
       <View
         style={[
           styles.textAreaContainer,
+          error && styles.errorBorder,
           {
             borderColor: getBorderColor(),
             borderWidth: isFocused ? 2 : 1,
             minHeight,
             maxHeight,
           },
-          error && styles.errorBorder,
         ]}
       >
         {leftIcon && (
@@ -103,7 +103,15 @@ export const TextArea: React.FC<TextAreaProps> = ({
         )}
 
         <TextInput
-          style={[styles.textArea, leftIcon && styles.textAreaWithIcon, style]}
+          style={[
+            styles.textArea,
+            leftIcon && styles.textAreaWithIcon,
+            {
+              minHeight: minHeight - 32,
+              maxHeight: maxHeight - 32,
+            },
+            style,
+          ]}
           placeholderTextColor={colors.text.placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -111,6 +119,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
           placeholder={placeholder}
           multiline={true}
           textAlignVertical="top"
+          scrollEnabled={true}
           maxLength={maxLength}
           {...props}
         />
@@ -162,6 +171,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
     padding: 0,
+    // Remove fixed height to allow auto-expansion
   },
   iconContainer: {
     position: "absolute",
@@ -178,7 +188,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.openSans.regular,
     padding: 16,
     lineHeight: 24,
-    flex: 1,
+    // Remove flex: 1 and height: "100%" for auto-expansion
   },
   textAreaWithIcon: {
     paddingLeft: 48,

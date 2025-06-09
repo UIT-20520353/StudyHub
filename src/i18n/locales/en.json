@@ -11,13 +11,18 @@
     "search": "Search",
     "filter": "Filter",
     "error_title": "Error",
-    "success_title": "Success"
+    "success_title": "Success",
+    "reset": "Reset",
+    "apply": "Apply",
+    "category": "Category"
   },
   "button": {
     "ok": "OK",
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "verify": "Verify"
+    "verify": "Verify",
+    "cancel_order": "Cancel",
+    "confirm_cancel_order": "Confirm cancel"
   },
   "auth": {
     "login": "Login",
@@ -25,7 +30,7 @@
     "email": "Email",
     "password": "Password",
     "confirm_password": "Confirm password",
-    "forgot_password": "Forgot password?",
+    "forgot_password_link": "Forgot password?",
     "no_account": "Don't have an account?",
     "has_account": "Already have an account?",
     "signup_now": "Sign up now",
@@ -99,14 +104,34 @@
     "verifying": "Verifying...",
     "verify_otp": "Verify OTP",
     "not_received_otp": "Didn't receive the code?",
-    "change_email": "Change email"
+    "change_email": "Change email",
+    "forgot_password": {
+      "title": "Reset Password",
+      "description": "Enter your email address and we'll send you a link to reset your password",
+      "info_text": "We'll send you a secure link to reset your password. Please check your email after clicking send.",
+      "send_button": "Send Reset Link",
+      "sending": "Sending...",
+      "email_sent": "Reset link sent successfully!",
+      "email_sent_title": "Check Your Email",
+      "email_sent_description": "We've sent a password reset link to your email address",
+      "instruction_check": "Check your email inbox",
+      "instruction_click": "Click the reset link in the email",
+      "instruction_reset": "Create a new password",
+      "back_to_login": "Back to Login",
+      "remember_password": "Remember your password?",
+      "not_received": "Didn't receive the email?",
+      "resend": "Resend",
+      "email_resent": "Email sent again!",
+      "send_error": "Failed to send reset email"
+    }
   },
   "tabs": {
     "home": "Home",
     "marketplace": "Market",
     "community": "Community",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "cart": "Cart"
   },
   "home": {
     "welcome": "Welcome to StudyHub",
@@ -127,9 +152,58 @@
     "sell_book": "Sell Book",
     "book_details": "Book Details",
     "seller_info": "Seller Information",
-    "contact_seller": "Contact Seller",
     "price": "Price",
-    "original_price": "Original Price"
+    "original_price": "Original Price",
+    "search_placeholder": "Search books, documents...",
+    "condition": {
+      "new": "New",
+      "like_new": "Like New",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "unknown": "Unknown"
+    },
+    "currency": "đ",
+    "attachments": " attachments",
+    "views": " views",
+    "image_error": "Failed to load image",
+    "description": "Description",
+    "delivery_info": "Delivery Information",
+    "delivery_method": "Delivery Method",
+    "address": "Address",
+    "contact_seller": "Contact",
+    "buy_now": "Buy Now",
+    "add_to_cart": "Add to Cart",
+    "remove_from_cart": "Remove from Cart",
+    "no_image": "No image available",
+    "price_note": "*Shipping fee not included",
+    "delivery": {
+      "shipper": "Delivery",
+      "hand_delivery": "Meet in person",
+      "both": "Both methods",
+      "shipper_note": "Shipping fee will be discussed with seller",
+      "hand_delivery_note": "Meeting location"
+    },
+    "cart": {
+      "added_success_title": "Added to cart successfully!",
+      "added_success_message": "{{productName}} has been added to your cart",
+      "removed_success_title": "Removed from cart successfully!",
+      "removed_success_message": "{{productName}} has been removed from your cart",
+      "cancel_reason": "Please enter the reason for canceling the order"
+    },
+    "filter_title": "Product Filter",
+    "product": {
+      "delete_success": "Product deleted successfully!",
+      "delete_error": "Failed to delete product"
+    }
+  },
+  "time": {
+    "just_now": "Just now",
+    "minutes": "m",
+    "hours": "h",
+    "days": "d",
+    "weeks": "w",
+    "months": "mo"
   },
   "community": {
     "create_post": "Create Post",
@@ -151,7 +225,71 @@
     "about": "About",
     "help": "Help",
     "privacy_policy": "Privacy Policy",
-    "terms": "Terms of Service"
+    "terms": "Terms of Service",
+    "user_profile_title": "User Profile",
+    "user_not_found": "User profile not found",
+    "personal_info": "Personal Information",
+    "academic_info": "Academic Information",
+    "contact_actions": "Contact",
+    "send_message": "Send Message",
+    "call": "Call",
+    "full_name": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "student_id": "Student ID",
+    "university": "University",
+    "major": "Major",
+    "year": "Year",
+    "not_public": "Not public",
+    "not_updated": "Not updated",
+    "year_format": "Year {{year}}",
+    "edit_info": "Edit Profile",
+    "change_password": "Change Password",
+    "change_avatar": "Change Avatar",
+    "avatar": {
+      "take_photo": "Take New Photo",
+      "choose_from_library": "Choose from Library",
+      "cancel": "Cancel",
+      "permission_camera": "Camera Permission Required",
+      "permission_camera_message": "App needs camera access to take photos.",
+      "permission_library": "Library Permission Required",
+      "permission_library_message": "App needs photo library access to change avatar.",
+      "uploading": "Uploading...",
+      "upload_success": "Success!",
+      "upload_success_message": "Profile picture has been updated successfully",
+      "file_too_large": "Image must not exceed 5MB",
+      "error_title": "Error",
+      "error_change": "Cannot change profile picture",
+      "error_take_photo": "Cannot take photo",
+      "error_pick_library": "Cannot pick from library",
+      "error_upload": "Cannot update profile picture"
+    },
+    "account_settings": "Account Settings",
+    "help_support": "Help & Support",
+    "actions": "Actions",
+    "stats": {
+      "products": "Products",
+      "sold": "Sold",
+      "reviews": "Reviews"
+    },
+    "password": {
+      "security_title": "Password Security",
+      "security_description": "Keep your account secure by changing your password regularly",
+      "requirements_title": "Password Requirements",
+      "requirement_length": "At least 6 characters",
+      "requirement_different": "Must be different from current password",
+      "requirement_secure": "Use a combination of letters and numbers",
+      "current_password": "Current Password",
+      "current_password_placeholder": "Enter your current password",
+      "new_password": "New Password",
+      "new_password_placeholder": "Enter your new password",
+      "confirm_password": "Confirm New Password",
+      "confirm_password_placeholder": "Confirm your new password",
+      "change_button": "Change Password",
+      "changing": "Changing...",
+      "change_success": "Password changed successfully!",
+      "change_error": "Failed to change password"
+    }
   },
   "settings": {
     "language": "Language",
@@ -165,12 +303,25 @@
     "security": "Security",
     "title": "Settings",
     "profile": "Profile",
+    "history_buy": "Buy history",
+    "history_sell": "Sell history",
     "button": {
       "logout": "Logout"
+    },
+    "order": {
+      "confirmed_success_message": "Order confirmed successfully!",
+      "shipped_success_message": "Order shipped successfully!",
+      "delivered_success_message": "Order delivered successfully!",
+      "completed_success_message": "Order completed successfully!"
     }
   },
   "api": {
     "error": {
+      "order": {
+        "product": {
+          "not-available": "Product not available"
+        }
+      },
       "internal-server": "Internal server error",
       "validate": {
         "login": {
@@ -178,6 +329,22 @@
         },
         "email": {
           "domain-mismatch": "Email domain mismatch with university"
+        },
+        "order": {
+          "buyer-seller": {
+            "same": "Buyer and seller cannot be the same"
+          }
+        },
+        "topic": {
+          "university-id": {
+            "required": "University ID is required"
+          }
+        },
+        "current-password": {
+          "incorrect": "Current password is incorrect"
+        },
+        "new-password": {
+          "must-differ": "New password must be different from current password"
         }
       },
       "user": {
